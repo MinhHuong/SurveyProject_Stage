@@ -1,3 +1,38 @@
 // Place all the styles related to the Employees controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.widget {
+  background-color: #ffffff;
+
+  .widget-header {
+    height: 50px;
+
+    div {
+      display: inline-block;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 90%;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 50px;
+      background-color: #000000;
+      display: inline-block;
+      padding-left: 15px;
+      padding-right: 15px;
+      position: relative;
+      left: 36px;
+    }
+  }
+
+  .widget-content {
+    padding: 20px;
+  }
+}
+
+.row {
+  margin-bottom: 15px;
+}
