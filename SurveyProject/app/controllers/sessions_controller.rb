@@ -4,9 +4,17 @@ class SessionsController < ApplicationController
 
   def create
     @user = User.find_by_username(params[:session][:username])
+    permission = @user.permission
+
     if @user && @user.authenticate(params[:session][:password])
       session[:user_id] = @user.id
-      redirect_to '/'
+      session[:name_user] = @user.firstname + ' ' + @user.lastname
+      case permission
+        when 'leader'
+          redirect_to '/leaders'
+        when 'employee'
+          redirect_to '/employees'
+      end
     else
       redirect_to '/login'
     end

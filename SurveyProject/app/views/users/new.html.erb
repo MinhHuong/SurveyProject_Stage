@@ -6,5 +6,6 @@
     <%= f.text_field :username, :placeholder => 'Username' %> <br>
     <%= f.password_field :password, :placeholder => 'Password' %> <br>
     <%= f.text_field :clients_id, :placeholder => 'Client id' %> <br>
+    <%= f.select :permission, %w(leader employee) %>
     <%= f.submit 'Create an account' %>
 <% end %>

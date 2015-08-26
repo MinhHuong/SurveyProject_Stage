@@ -1,6 +1,6 @@
 class CreateUsers < ActiveRecord::Migration
   def change
-    # drop_table :users
+    drop_table :users
 
     create_table :users do |t|
       t.string :firstname, null: false
@@ -8,8 +8,9 @@ class CreateUsers < ActiveRecord::Migration
       t.string :username, null: false
       t.string :password_digest, null: false
       t.string :link_picture
-      t.date :date_create
+      t.string :permission, null: false
       t.references :clients, null: false
+      t.timestamps null: false
     end
   end
 end

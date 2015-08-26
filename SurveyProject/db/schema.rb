@@ -14,9 +14,10 @@
 ActiveRecord::Schema.define(version: 20150825031542) do
 
   create_table "clients", force: true do |t|
-    t.string "name_client",       null: false
-    t.string "connection_string"
-    t.date   "date_join"
+    t.string   "name_client",       null: false
+    t.string   "connection_string"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "employees", force: true do |t|
@@ -37,13 +38,15 @@ ActiveRecord::Schema.define(version: 20150825031542) do
   add_index "sysdiagrams", ["principal_id", "name"], name: "UK_principal_name", unique: true
 
   create_table "users", force: true do |t|
-    t.string  "firstname",       null: false
-    t.string  "lastname",        null: false
-    t.string  "username",        null: false
-    t.string  "password_digest", null: false
-    t.string  "link_picture"
-    t.date    "date_create"
-    t.integer "clients_id",      null: false
+    t.string   "firstname",       null: false
+    t.string   "lastname",        null: false
+    t.string   "username",        null: false
+    t.string   "password_digest", null: false
+    t.string   "link_picture"
+    t.string   "permission",      null: false
+    t.integer  "clients_id",      null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
 end
