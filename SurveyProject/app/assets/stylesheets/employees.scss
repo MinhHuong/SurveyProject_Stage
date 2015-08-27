@@ -36,3 +36,75 @@
 .row {
   margin-bottom: 15px;
 }
+
+.my-profile {
+  margin-top: 24px;
+  margin-bottom: 30px;
+
+  #zone-picture {
+    text-align: center;
+
+    img {
+      width: 200px;
+      height: 200px;
+      display: block;
+      margin-right: auto;
+      margin-left: auto;
+      margin-bottom: 20px;
+      border: 10px solid #ffffff;
+      -webkit-box-shadow: 5px 5px 5px #848484;
+      -moz-box-shadow: 5px 5px 5px #848484;
+      box-shadow: 5px 5px 5px #848484;
+    }
+  }
+
+  #zone-info {
+    table {
+      display: table;
+      width: 100%;
+
+      td, th {
+        line-height: 36px;
+      }
+
+      th {
+        width: 15%;
+      }
+
+      td {
+        width: 65%;
+      }
+    }
+  }
+}
+
+.zone-button {
+  text-align: center;
+
+  a, input[type=submit] {
+    width: 100px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}

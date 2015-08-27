@@ -23,8 +23,15 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#"><i class="fa fa-user"></i> My profile</a></li>
-              <li><a href="#"><%= link_to 'Log out', :logout, method: 'delete' %></a></li>
+              <li>
+                <%= link_to profile_path(@user_id) do %>
+                    <i class="fa fa-user"></i> My profile
+                <% end %>
+              <li>
+                <%= link_to :logout, method: 'delete' do %>
+                  <i class="fa fa-sign-out"></i> Log out
+                <% end %>
+              </li>
             </ul>
           </li>
         </ul>

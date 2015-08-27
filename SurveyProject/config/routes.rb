@@ -10,7 +10,12 @@ Rails.application.routes.draw do
 
   resources :clients
   resources :leaders, only: [:index]
-  resources :employees, only: [:index]
+  # resources :employees, only: [:index, :show, :edit, :update]
+
+  get '/employees' => 'employees#index'
+  get '/employees/:id' => 'employees#show', as: :profile
+  get '/employees/:id/edit' => 'employees#edit', as: :edit_profile
+  patch '/employees/:id' => 'employees#update', as: :update_employee
 
   # resources :clients, :users, :employees
 

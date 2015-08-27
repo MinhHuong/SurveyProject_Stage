@@ -34,8 +34,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+  end
+
   private
   def user_params
     params.require(:user).permit(:firstname, :lastname, :username, :password, :clients_id, :permission)
+  end
+
+  def user_employee_params
+    params.require(:user).permit(:firstname, :lastname, :password)
   end
 end
