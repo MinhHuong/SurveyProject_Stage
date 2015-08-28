@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get '/employees/:id' => 'employees#show', as: :profile
   get '/employees/:id/edit' => 'employees#edit', as: :edit_profile
   patch '/employees/:id' => 'employees#update', as: :update_employee
+  get '/employees/checkpwd/:id' => 'employees#check_password'
 
   # resources :clients, :users, :employees
 

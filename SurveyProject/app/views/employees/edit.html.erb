@@ -1,0 +1,81 @@
+<% content_for :menu_bar do %>
+    <%= render 'menubar' %>
+<% end %>
+
+<% content_for :content do %>
+    <h1>Edit your profile</h1>
+    <div class="my-profile">
+      <%= form_for(@employee, :url => update_employee_path, html: { class: 'form-horizontal', role: 'form',  multipart: true}) do |f| %>
+          <div class="row">
+            <div class="col-sm-4" id="zone-picture">
+              <%= image_tag(@employee.link_picture, :alt => 'Employee', :id => 'img-user') %>
+              <% # <input type="file" style="display: none;" id="upload-img" accept="image/png,image/gif,image/jpeg"> %>
+              <%= file_field(:upload, :img, accept: 'image/png,image/gif,image/jpeg') %>
+              <a id='btn-upload-img' class="btn btn-info" href="#">Upload</a>
+            </div>
+            <div class="col-sm-8">
+              <%= hidden_field_tag('user_id', @employee[:id]) %>
+              <div class="form-group">
+                <%= f.label('Firstname', class: 'control-label col-sm-2') %>
+                <div class="col-sm-5">
+                  <%= f.text_field(:firstname, class: 'form-control')%>
+                </div>
+              </div>
+              <div class="form-group">
+                <%= f.label('Lastname', class: 'control-label col-sm-2') %>
+                <div class="col-sm-5">
+                  <%= f.text_field(:lastname, class: 'form-control')%>
+                </div>
+              </div>
+              <div class="form-group">
+                <%= f.label('Login', class: 'control-label col-sm-2') %>
+                <div class="col-sm-5">
+                  <%= f.text_field(:username, class: 'form-control', disabled: true )%>
+                </div>
+              </div>
+              <div class="form-group">
+                <%= f.label('Password', class: 'control-label col-sm-2') %>
+                <div class="col-sm-5">
+                  <%= f.password_field(:password, class: 'form-control', readonly: true, value: '***') %>
+                </div>
+                <div class="col-sm-1">
+                  <a href="#" id="change-pwd">Change</a>
+                </div>
+              </div>
+              <div class="form-group">
+                <%= f.label('Permission', class: 'control-label col-sm-2') %>
+                <div class="col-sm-5">
+                  <%= text_field_tag 'permission', 'Employee', class: 'form-control', disabled: true %>
+                </div>
+              </div>
+              <div class="form-group">
+                <%= f.label('Date joined', class: 'control-label col-sm-2') %>
+                <div class="col-sm-5">
+                  <%= f.text_field(:created_at, class: 'form-control', disabled: true) %>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-5">
+                  <p style="color:#848484;font-style: italic;">After editing, please click Confirm to update everything !</p>
+                  <%= f.submit('Confirm', class: 'btn btn-success') %>
+                </div>
+              </div>
+            </div>
+          </div>
+    <% end %>
+    </div>
+    <div id="dialog-form" title="Change password">
+      <form>
+          <label for="oldpwd">Old password</label>
+          <input type="password" name="oldpwd" id="oldpwd" class="text ui-widget-content ui-corner-all"> <br>
+          <label for="newpwd">New password</label>
+          <input type="password" name="newpwd" id="newpwd" class="text ui-widget-content ui-corner-all"> <br>
+          <label for="confirmpwd">Retype password</label>
+          <input type="password" name="confirmpwd" id="confirmpwd" class="text ui-widget-content ui-corner-all"> <br>
+
+          <!-- Allow form submission with keyboard without duplicating the dialog button -->
+          <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+      </form>
+    </div>
+<% end %>
+

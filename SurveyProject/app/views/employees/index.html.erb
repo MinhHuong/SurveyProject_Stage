@@ -1,0 +1,67 @@
+<% content_for :menu_bar do %>
+    <%= render 'menubar' %>
+<% end %>
+
+<% content_for :content do %>
+    <div class="row">
+      <!-- Recently created surveys -->
+      <div class="col-sm-6">
+        <div class="widget widget-left">
+          <div class="widget-header">
+            <div style="background-color: #255625">
+              <h3>Recently created surveys</h3>
+            </div>
+          </div>
+          <div class="widget-content">
+            <p>Maybe I'll use a grid here</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recently done surveys -->
+      <div class="col-sm-6">
+        <div class="widget widget-right">
+          <div class="widget-header">
+            <div style="background-color: #eea236">
+              <h3>Recently done surveys</h3>
+            </div>
+          </div>
+          <div class="widget-content">
+            <p>jqxGrid</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- High priority surveys -->
+      <div class="col-sm-6">
+        <div class="widget widget-left">
+          <div class="widget-header">
+            <div style="background-color: #ac2925">
+              <h3>High priority surveys</h3>
+            </div>
+          </div>
+          <div class="widget-content">
+            <p>So I won't have to do the paging</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Surveys that will be closed today -->
+      <div class="col-sm-6">
+        <div class="widget widget-right">
+          <div class="widget-header">
+            <div style="background-color: #286090">
+              <h3>Surveys that will be closed today</h3>
+            </div>
+          </div>
+          <div class="widget-content">
+            <p>But how to link ????? How to use the link_to ruby's helper</p>
+            <p>INTERNAL SCREAM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+<% end %>
+<%= render template: 'layouts/application' %>

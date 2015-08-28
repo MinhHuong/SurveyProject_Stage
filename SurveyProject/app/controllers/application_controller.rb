@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_user_id
   def set_user_id
-    @user_id = session[:user_id]
+    @user_id = session[:user_id] ? session[:user_id] : 0;
   end
 
   helper_method :current_user

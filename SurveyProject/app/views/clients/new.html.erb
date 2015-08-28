@@ -1,0 +1,9 @@
+<h1>Create new Client</h1>
+
+<h2>I mean Company</h2>
+
+<%= form_for(@client) do |f| %>
+    Client's name: <%= f.text_field :name_client %>
+    Connection string: <%= f.text_field :connection_string %>
+    <%= f.submit 'Submit' %>
+<% end %>

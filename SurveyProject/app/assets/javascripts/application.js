@@ -13,11 +13,7 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery-ui
 //= require bootstrap
 //= require turbolinks
 //= require_tree .
-
-$(function() {
-    // $(".dropdown-toggle").dropdown();
-    $(".dropdown-toggle");
-});
