@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150831045701) do
+ActiveRecord::Schema.define(version: 20150901104500) do
 
   create_table "clients", force: true do |t|
     t.string   "name_client",       null: false
@@ -33,13 +33,14 @@ ActiveRecord::Schema.define(version: 20150831045701) do
   end
 
   create_table "surveys", force: true do |t|
-    t.string   "name_survey",     null: false
-    t.integer  "type_surveys_id", null: false
-    t.integer  "priorities_id",   null: false
-    t.integer  "users_id"
-    t.datetime "date_closed",     null: false
+    t.string   "name_survey",                   null: false
+    t.integer  "type_survey_id",                null: false
+    t.integer  "priority_id",                   null: false
+    t.integer  "user_id"
+    t.datetime "date_closed",                   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "status",         default: true
   end
 
   create_table "sysdiagrams", primary_key: "diagram_id", force: true do |t|

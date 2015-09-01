@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'home#index'
+  root 'sessions#new'
 
   get '/signup' => 'users#new', as: :signup
   resources :users
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   patch '/employees/:id' => 'employees#update', as: :update_employee
   get '/employees/checkpwd/:id' => 'employees#check_password'
 
-  resources :surveys
+  get '/surveys' => 'surveys#index', as: :surveys_all
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

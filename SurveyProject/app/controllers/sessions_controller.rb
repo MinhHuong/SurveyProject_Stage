@@ -9,6 +9,7 @@ class SessionsController < ApplicationController
     if @user && @user.authenticate(params[:session][:password])
       session[:user_id] = @user.id
       session[:name_user] = @user.firstname + ' ' + @user.lastname
+      session[:user_permission] = @user.permission
       case permission
         when 'leader'
           redirect_to '/leaders'
