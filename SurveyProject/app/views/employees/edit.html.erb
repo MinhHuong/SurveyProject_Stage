@@ -36,7 +36,7 @@
               <div class="form-group">
                 <%= f.label('Password', class: 'control-label col-sm-2') %>
                 <div class="col-sm-5">
-                  <%= f.password_field(:password, class: 'form-control', readonly: true, value: '***') %>
+                  <%= f.password_field(:password, class: 'form-control', readonly: true, value: @employee.password) %>
                 </div>
                 <div class="col-sm-1">
                   <a href="#" id="change-pwd">Change</a>
@@ -66,15 +66,23 @@
     </div>
     <div id="dialog-form" title="Change password">
       <form>
+        <div>
           <label for="oldpwd">Old password</label>
-          <input type="password" name="oldpwd" id="oldpwd" class="text ui-widget-content ui-corner-all"> <br>
+          <input type="password" name="oldpwd" id="oldpwd" class="text ui-widget-content ui-corner-all">
+        </div>
+        <div>
           <label for="newpwd">New password</label>
-          <input type="password" name="newpwd" id="newpwd" class="text ui-widget-content ui-corner-all"> <br>
+          <input type="password" name="newpwd" id="newpwd" class="text ui-widget-content ui-corner-all">
+        </div>
+        <div>
           <label for="confirmpwd">Retype password</label>
-          <input type="password" name="confirmpwd" id="confirmpwd" class="text ui-widget-content ui-corner-all"> <br>
-
-          <!-- Allow form submission with keyboard without duplicating the dialog button -->
-          <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+          <input type="password" name="confirmpwd" id="confirmpwd" class="text ui-widget-content ui-corner-all">
+        </div>
+        <div>
+          <p id='show-errors' style="font-style: italic; color: #ac2925;"></p>
+        </div>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
       </form>
     </div>
 <% end %>

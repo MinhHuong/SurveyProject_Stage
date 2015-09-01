@@ -5,7 +5,7 @@
 $ ->
   dialog = $('#dialog-form').dialog({
     autoOpen: false,
-    height: 260,
+    height: 300,
     width: 430,
     modal: true,
     buttons:
@@ -22,11 +22,14 @@ $ ->
               # if new password == confirm password
               if $('#newpwd').val() == $('#confirmpwd').val() and $('#newpwd').val() != '' and $('#confirmpwd').val() != ''
                 $('#user_password').val( $('#newpwd').val() )
+                console.log( $('#user_password').val() )
                 dialog.dialog('close')
               else
+                $('#show-errors').html('New password and confirmed password don\'t look alike (and can\'t be empty) !');
                 console.log('u suck so much, cant even retype correctly the new password')
             # if old password not valid
             else
+              $('#show-errors').html('Wrong old-password !')
               console.log('Wrong old passwor u piece of shit')
             return
           })

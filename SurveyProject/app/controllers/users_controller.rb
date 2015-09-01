@@ -21,14 +21,27 @@ class UsersController < ApplicationController
           employee = Employee.new
           employee.user_id = @user.id
           employee.save
+          path = '/employees'
         when 'leader'
           leader = Leader.new
           leader.user_id = @user.id
           leader.save
+          path = '/leaders'
+        else
+          path = '/'
+      end
+
+      username = @user.username
+      client_name = Client.find(@user.clients_id).name_client
+
+      directory = 'public/images/' + client_name + '/users/' + username
+      unless File.directory?(directory)
+        FileUtils.mkdir_p(directory)
       end
 
       session[:user_id] = @user.id
-      redirect_to '/'
+      session[:name_user] = @user.firstname + ' ' + @user.lastname
+      redirect_to path
     else
       redirect_to '/signup'
     end
