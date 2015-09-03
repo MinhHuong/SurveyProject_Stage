@@ -9,19 +9,22 @@
         <div class="survey">
           <h3><%= survey.name_survey %></h3>
           <p>
-            Created by:
+            <span class="survey-label">Created by:</span>
             <% if survey.user.present? %>
                 <%= survey.user.firstname %>
             <% else %>
                 Anonymous
             <% end %>
           </p>
-          <p>From: </p>
-          <p>Type: <%= survey.type_survey.name_type_survey %></p>
-          <p>Priority: <%= survey.priority.name_priority %></p>
           <p>
-            Status:
-            <% if survey.status == 0 %>
+            <span class="survey-label">From:</span> <%= survey.created_at.strftime('%d/%m/%Y') %> -
+            <span class="survey-label">To:</span> <%= survey.date_closed.strftime('%d/%m/%Y') %>
+          </p>
+          <p><span class="survey-label">Type:</span> <%= survey.type_survey.name_type_survey %></p>
+          <p><span class="survey-label">Priority:</span> <%= survey.priority.name_priority %></p>
+          <p>
+            <span class="survey-label">Status:</span>
+            <% if survey.status %>
                 Opened
             <% else %>
                 Closed
