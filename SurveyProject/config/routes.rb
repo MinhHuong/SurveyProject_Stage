@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get '/employees/checkpwd/:id' => 'employees#check_password'
 
   get '/surveys' => 'surveys#index', as: :surveys_all
+  get '/surveys/filter' => 'surveys#filter', as: :surveys_filtered
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

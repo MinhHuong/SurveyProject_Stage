@@ -10,7 +10,8 @@
         <div class="page-content-header">
           <div class="info-left">
             <h2><%= @supply_info[:name_list_surveys] %></h2>
-            <p>Sorted by: <span id="sort-criteria"><%= @supply_info[:filter_criteria] %></span></p>
+            <p>Sorted by: <%= @supply_info[:filter_criteria] %></p>
+            <span id="filter-code" style="display: none;"><%= @supply_info[:filter_code] %></span>
           </div>
           <div class="info-right">
             <h3><%= @supply_info[:total] %></h3>
@@ -22,28 +23,22 @@
                 <h3 class="label-group"><%= key %></h3>
                 <% items.each do |survey| %>
                     <%= react_component 'Survey', { survey: survey, type_priority: survey.priority, type_survey: survey.type_survey, user_author: survey.user }%>
-              <% end %>
+                <% end %>
               </div>
           <% end %>
         </div>
       </div>
       <div class="rigth-panel col-sm-3 well">
         <h2>Filter</h2>
-        <form action="" id="filter_form">
-          <input id="datecreated-cb" type="checkbox" name="filter-criteria" value="datecreated" />
-          <label for="datecreated-cb">Date created</label><br>
-          <input id="dateclosed-cb" type="checkbox" name="filter-criteria" value="dateclosed" />
-          <label for="dateclosed-cb">Date closed</label><br>
-          <input id="name-cb" type="checkbox" name="filter-criteria" value="name" checked="on"/>
-          <label for="name-cb">Name</label><br>
-          <input id="category-cb" type="checkbox" name="filter-criteria" value="category" />
-          <label for="category-cb">Category</label><br>
-          <input id="status-cb" type="checkbox" name="filter-criteria" value="status" />
-          <label for="status-cb">Status</label><br>
-          <input id="priority-id" type="checkbox" name="filter-criteria" value="priority" />
-          <label for="priority-id">Priority</label><br>
-          <button class="btn btn-success">Filter</button>
-        </form>
+        <%= form_tag :surveys_filtered, :id => 'filter_form', :method => 'get' do %>
+            <%= radio_button_tag 'filter_criteria', 'created_at' %><%= label_tag 'filter_criteria_created_at', 'Date created' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'date_closed' %><%= label_tag 'filter_criteria_date_closed', 'Date closed' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'name_survey', true %><%= label_tag 'filter_criteria_name_survey', 'Name' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'type_survey_id' %><%= label_tag 'filter_criteria_type_survey_id', 'Category' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'status' %><%= label_tag 'filter_criteria_status', 'Status' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'priority_id' %><%= label_tag 'filter_criteria_priority_id', 'Priority' %> <br>
+            <%= submit_tag 'Filter', { class: 'btn btn-success' }%>
+        <% end %>
       </div>
     </div>
 <% end %>
