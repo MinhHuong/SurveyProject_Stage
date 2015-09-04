@@ -5,31 +5,45 @@
 <% end %>
 
 <% content_for :content do %>
-    <% @surveys.each do |survey| %>
-        <div class="survey">
-          <h3><%= survey.name_survey %></h3>
-          <p>
-            <span class="survey-label">Created by:</span>
-            <% if survey.user.present? %>
-                <%= survey.user.firstname %>
-            <% else %>
-                Anonymous
-            <% end %>
-          </p>
-          <p>
-            <span class="survey-label">From:</span> <%= survey.created_at.strftime('%d/%m/%Y') %> -
-            <span class="survey-label">To:</span> <%= survey.date_closed.strftime('%d/%m/%Y') %>
-          </p>
-          <p><span class="survey-label">Type:</span> <%= survey.type_survey.name_type_survey %></p>
-          <p><span class="survey-label">Priority:</span> <%= survey.priority.name_priority %></p>
-          <p>
-            <span class="survey-label">Status:</span>
-            <% if survey.status %>
-                Opened
-            <% else %>
-                Closed
-            <% end %>
-          </p>
+    <div class="row" id="list-surveys">
+      <div class="page-content col-sm-9" >
+        <div class="page-content-header">
+          <div class="info-left">
+            <h2><%= @supply_info[:name_list_surveys] %></h2>
+            <p>Sorted by: <span id="sort-criteria"><%= @supply_info[:filter_criteria] %></span></p>
+          </div>
+          <div class="info-right">
+            <h3><%= @supply_info[:total] %></h3>
+          </div>
         </div>
-    <% end %>
+        <div class="page-content-list">
+          <% @surveys.each do |key, items| %>
+              <div class="group-surveys">
+                <h3 class="label-group"><%= key %></h3>
+                <% items.each do |survey| %>
+                    <%= react_component 'Survey', { survey: survey, type_priority: survey.priority, type_survey: survey.type_survey, user_author: survey.user }%>
+              <% end %>
+              </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="rigth-panel col-sm-3 well">
+        <h2>Filter</h2>
+        <form action="" id="filter_form">
+          <input id="datecreated-cb" type="checkbox" name="filter-criteria" value="datecreated" />
+          <label for="datecreated-cb">Date created</label><br>
+          <input id="dateclosed-cb" type="checkbox" name="filter-criteria" value="dateclosed" />
+          <label for="dateclosed-cb">Date closed</label><br>
+          <input id="name-cb" type="checkbox" name="filter-criteria" value="name" checked="on"/>
+          <label for="name-cb">Name</label><br>
+          <input id="category-cb" type="checkbox" name="filter-criteria" value="category" />
+          <label for="category-cb">Category</label><br>
+          <input id="status-cb" type="checkbox" name="filter-criteria" value="status" />
+          <label for="status-cb">Status</label><br>
+          <input id="priority-id" type="checkbox" name="filter-criteria" value="priority" />
+          <label for="priority-id">Priority</label><br>
+          <button class="btn btn-success">Filter</button>
+        </form>
+      </div>
+    </div>
 <% end %>

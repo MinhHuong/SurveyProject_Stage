@@ -33,6 +33,7 @@ gem 'jquery-turbolinks'
 gem 'jquery-ui-rails', '~> 5.0.5'
 gem 'bower-rails'
 gem 'sprockets', '2.12.3'
+gem 'react-rails', '~> 1.0'
 
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
