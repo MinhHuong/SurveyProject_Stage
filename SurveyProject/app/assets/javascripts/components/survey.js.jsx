@@ -19,10 +19,6 @@ var Survey = React.createClass({
                 <p>
                     <span className="survey-label">Priority: </span> { type_priority.name_priority }
                 </p>
-                <p>
-                    <span className="survey-label">Status: </span>
-                    { survey.status == 1 ? 'Opened' : 'Closed' }
-                </p>
             </div>
         )
     }
