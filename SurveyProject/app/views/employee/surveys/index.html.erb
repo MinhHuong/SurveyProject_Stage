@@ -1,6 +1,6 @@
 <% content_for :menu_bar do %>
     <% if current_user && current_user.employee? %>
-        <%= render 'employees/menubar' %>
+        <%= render 'employee/employees/menubar' %>
     <% end %>
 <% end %>
 
@@ -30,7 +30,7 @@
       </div>
       <div class="rigth-panel col-sm-3 well">
         <h2>Filter</h2>
-        <%= form_tag :surveys_filtered, :id => 'filter_form', :method => 'get', :role => 'form' do %>
+        <%= form_tag :employee_surveys_filtered, :id => 'filter_form', :method => 'get', :role => 'form' do %>
             <%= radio_button_tag 'filter_criteria', 'created_at' %><%= label_tag 'filter_criteria_created_at', 'Date created' %> <br>
             <%= radio_button_tag 'filter_criteria', 'date_closed' %><%= label_tag 'filter_criteria_date_closed', 'Date closed' %> <br>
             <%= radio_button_tag 'filter_criteria', 'name_survey', true %><%= label_tag 'filter_criteria_name_survey', 'Name' %> <br>

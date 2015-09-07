@@ -1,9 +1,7 @@
-require 'json'
-
-class SurveysController < ApplicationController
+class Employee::SurveysController < ApplicationController
   before_action :require_employee, only: [:index, :show]
 
-  # Not showing surveys that are already CLOSED
+  # display all surveys, ordered by Name (default)
   def index
     @surveys = Survey.all.where(:status => true).includes(:priority, :type_survey, :user).order(:name_survey).group_by{ |survey| survey.name_survey[0] }
     total = Survey.all.where(:status => true).length
@@ -13,8 +11,12 @@ class SurveysController < ApplicationController
         name_list_surveys: name_list_surveys,
         filter_criteria: 'Name'
     }
+    render 'index'
   end
 
+  # Filter all surveys based on a selected criteria (chosen from radio button)
+  # allow only one criterias, because applying multiple criterias would require to use RECURSIVE function
+  # to display data on views, which is very complicated, especially when we use web components
   def filter
     filter_criteria = params[:filter_criteria]
     order_asc_desc = ( filter_criteria == 'date_closed' || filter_criteria == 'created_at' ) ? 'DESC' : 'ASC'
@@ -40,25 +42,14 @@ class SurveysController < ApplicationController
     render 'index'
   end
 
+  # Show survey and all the questions contained within
   def show
   end
 
-  def new
-  end
-
-  def create
-  end
-
-  def edit
-  end
-
-  def update
-  end
-
-  def destroy
-  end
-
   private
+  # Change code of filter to some readable name
+  # eg: name --> Name, dateclosed --> Date closed
+  # used to displat the selected critaria in views
   def to_readable_name(name)
     case name
       when 'name_survey' then 'Title of survey'

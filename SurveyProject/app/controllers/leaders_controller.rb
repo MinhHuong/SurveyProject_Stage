@@ -1,2 +1,0 @@
-class LeadersController < ApplicationController
-end

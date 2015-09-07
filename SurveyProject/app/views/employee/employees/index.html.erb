@@ -13,7 +13,9 @@
             </div>
           </div>
           <div class="widget-content">
-            <p>Some surveys here</p>
+            <% @content_widgets[:recent_created].each do |survey| %>
+                <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.created_at, label_bonus_info: 'Created at: ' } %>
+            <% end %>
           </div>
         </div>
       </div>
@@ -43,7 +45,9 @@
             </div>
           </div>
           <div class="widget-content">
-            <p>I'll add surveys here and there and...</p>
+            <% @content_widgets[:high_prio].each do |survey| %>
+                <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.date_closed, label_bonus_info: 'Closed at: ' } %>
+            <% end %>
           </div>
         </div>
       </div>
@@ -57,7 +61,9 @@
             </div>
           </div>
           <div class="widget-content">
-            <p>Gotta do the paging</p>
+            <% @content_widgets[:closed_today].each do |survey| %>
+                <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.date_closed, label_bonus_info: 'Closed today: ' } %>
+            <% end %>
           </div>
         </div>
       </div>

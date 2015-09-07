@@ -1,4 +1,4 @@
-// Place all the styles related to the Employees controller here.
+// Place all the styles related to the employee/employees controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
@@ -65,6 +65,10 @@
 
   .widget-content {
     padding: 20px;
+
+    .info-bonus {
+      font-style: italic;
+    }
   }
 }
 

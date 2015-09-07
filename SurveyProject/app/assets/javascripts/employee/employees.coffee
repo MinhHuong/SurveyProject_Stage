@@ -12,11 +12,11 @@ $ ->
       'Change': ->
         $.ajax({
           type: 'GET',
-          url: '/employees/checkpwd/' + $('#user_id').val(),
+          url: '/employee/profile/checkpwd/' + $('#user_id').val(),
           data: { oldPwd: $('#oldpwd').val() },
           contentType: 'json',
           success: (data) ->
-            # if the old password is valid
+# if the old password is valid
             if(data == true)
               console.log('Haha right old password')
               # if new password == confirm password
@@ -27,12 +27,12 @@ $ ->
               else
                 $('#show-errors').html('New password and confirmed password don\'t look alike (and can\'t be empty) !');
                 console.log('u suck so much, cant even retype correctly the new password')
-            # if old password not valid
+# if old password not valid
             else
               $('#show-errors').html('Wrong old-password !')
               console.log('Wrong old passwor u piece of shit')
             return
-          })
+        })
       ,
       Cancel: ->
         dialog.dialog('close')

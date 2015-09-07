@@ -5,11 +5,10 @@
 <% content_for :content do %>
     <h1>Edit your profile</h1>
     <div class="my-profile">
-      <%= form_for(@employee, :url => update_employee_path, html: { class: 'form-horizontal', role: 'form',  multipart: true}) do |f| %>
+      <%= form_for(@employee, :url => :employee_update_profile, html: { class: 'form-horizontal', role: 'form',  multipart: true}) do |f| %>
           <div class="row">
             <div class="col-sm-4" id="zone-picture">
               <%= image_tag(@employee.link_picture, :alt => 'Employee', :id => 'img-user') %>
-              <% # <input type="file" style="display: none;" id="upload-img" accept="image/png,image/gif,image/jpeg"> %>
               <%= file_field(:upload, :img, accept: 'image/png,image/gif,image/jpeg') %>
               <a id='btn-upload-img' class="btn btn-info" href="#">Upload</a>
             </div>
