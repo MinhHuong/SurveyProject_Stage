@@ -13,18 +13,18 @@ class Employee::EmployeesController < ApplicationController
     # recently created surveys
     now = Date.today
     seven_day_ago = (now - 7)
-    recent_created = all_surveys.where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day)
+    recent_created = all_surveys.where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day).limit(5)
 
     # @high_prio = all_surveys.where(:status => true).where(:priority_id => 1)
     # can use the above, but this way can be more dynamic (more...right)
     # high priority surveys
-    high_prio = all_surveys.where(:priority_id => (Priority.where(:name_priority => 'High')))
+    high_prio = all_surveys.where(:priority_id => (Priority.where(:name_priority => 'High'))).limit(5)
 
     # surveys that will be closed today
-    closed_today = all_surveys.where(:date_closed => now.beginning_of_day..now.end_of_day)
+    closed_today = all_surveys.where(:date_closed => now.beginning_of_day..now.end_of_day).limit(5)
 
     # recently done surveys
-    recent_done = all_surveys.where(:id => recently_done_surveys_of(session[:user_id]))
+    recent_done = all_surveys.where(:id => recently_done_surveys_of(session[:user_id])).limit(5)
 
     @content_widgets = {
         recent_created: recent_created,

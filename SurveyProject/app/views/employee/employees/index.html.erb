@@ -16,6 +16,11 @@
             <% @content_widgets[:recent_created].each do |survey| %>
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.created_at, label_bonus_info: 'Created at: ' } %>
             <% end %>
+            <p class="view-all">
+              <%= link_to :employee_recently_created do %>
+                  View all <i class="fa fa-angle-double-right"></i>
+              <% end %>
+            </p>
           </div>
         </div>
       </div>
@@ -31,6 +36,9 @@
           <div class="widget-content">
             <% @content_widgets[:recent_done].each do |survey| %>
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.created_at, label_bonus_info: 'Done at: ' } %>
+            <% end %>
+            <%= link_to :employee_recently_done do %>
+                View all <i class="fa fa-angle-double-right"></i>
             <% end %>
           </div>
         </div>
@@ -50,6 +58,7 @@
             <% @content_widgets[:high_prio].each do |survey| %>
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.date_closed, label_bonus_info: 'Closed at: ' } %>
             <% end %>
+            <p class="view-all"><a href="#">View all <i class="fa fa-angle-double-right"></i></a></p>
           </div>
         </div>
       </div>
@@ -66,6 +75,7 @@
             <% @content_widgets[:closed_today].each do |survey| %>
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.date_closed, label_bonus_info: 'Closed today: ' } %>
             <% end %>
+            <p class="view-all"><a href="#">View all <i class="fa fa-angle-double-right"></i></a></p>
           </div>
         </div>
       </div>

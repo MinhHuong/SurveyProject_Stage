@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     get '/profile/checkpwd/:id' => 'employees#check_password'
     get '/surveys' => 'surveys#index', as: :surveys_all
     get '/surveys/filter' => 'surveys#filter', as: :surveys_filtered
+    get '/surveys/recently_created' => 'surveys#index_recently_created', as: :recently_created
+    get '/surveys/recently_done' => 'surveys#index_recently_done', as: :recently_done
   end
 
   # Routes for Leaders and everything involved
