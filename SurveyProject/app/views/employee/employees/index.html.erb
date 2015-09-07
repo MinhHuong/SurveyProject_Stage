@@ -29,7 +29,9 @@
             </div>
           </div>
           <div class="widget-content">
-            <p>Recently done</p>
+            <% @content_widgets[:recent_done].each do |survey| %>
+                <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.created_at, label_bonus_info: 'Done at: ' } %>
+            <% end %>
           </div>
         </div>
       </div>

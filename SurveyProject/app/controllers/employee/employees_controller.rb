@@ -10,20 +10,27 @@ class Employee::EmployeesController < ApplicationController
   def index
     all_surveys = Survey.all.where(:status => true)
 
+    # recently created surveys
     now = Date.today
     seven_day_ago = (now - 7)
     recent_created = all_surveys.where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day)
 
     # @high_prio = all_surveys.where(:status => true).where(:priority_id => 1)
     # can use the above, but this way can be more dynamic (more...right)
+    # high priority surveys
     high_prio = all_surveys.where(:priority_id => (Priority.where(:name_priority => 'High')))
 
+    # surveys that will be closed today
     closed_today = all_surveys.where(:date_closed => now.beginning_of_day..now.end_of_day)
+
+    # recently done surveys
+    recent_done = all_surveys.where(:id => recently_done_surveys_of(session[:user_id]))
 
     @content_widgets = {
         recent_created: recent_created,
         high_prio: high_prio,
-        closed_today: closed_today
+        closed_today: closed_today,
+        recent_done: recent_done
     }
   end
 
@@ -91,5 +98,18 @@ class Employee::EmployeesController < ApplicationController
       path_img = client_name + '/users/' + user.username + '/' + name
       User.where(:id => user.id).update_all(link_picture: path_img)
     end
+  end
+
+  def recently_done_surveys_of(user_id)
+    now = Date.today
+    seven_day_ago = (now - 7)
+    items = []
+    FinishSurvey
+        .where(:user_id => user_id)
+        .where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day)
+        .each do |item|
+      items << item.survey_id
+    end
+    items
   end
 end
