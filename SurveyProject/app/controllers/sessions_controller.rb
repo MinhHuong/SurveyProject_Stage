@@ -12,9 +12,9 @@ class SessionsController < ApplicationController
       session[:user_permission] = @user.permission
       case permission
         when 'leader'
-          redirect_to '/leaders'
+          redirect_to '/leader/home'
         when 'employee'
-          redirect_to '/employees'
+          redirect_to '/employee/home'
       end
     else
       redirect_to '/login'

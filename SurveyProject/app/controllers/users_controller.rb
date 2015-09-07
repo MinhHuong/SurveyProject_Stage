@@ -21,12 +21,12 @@ class UsersController < ApplicationController
           employee = Employee.new
           employee.user_id = @user.id
           employee.save
-          path = '/employees'
+          path = '/employee/home'
         when 'leader'
           leader = Leader.new
           leader.user_id = @user.id
           leader.save
-          path = '/leaders'
+          path = '/leader/home'
         else
           path = '/'
       end
