@@ -1,0 +1,32 @@
+<% content_for :menu_bar do %>
+    <%= render 'employee/employees/menubar' %>
+<% end %>
+
+<% content_for :content do %>
+    <div id="big-info-survey" class="well">
+      <h2><%= @survey.name_survey %></h2>
+      <table>
+        <tr>
+          <th>Author:</th>
+          <td><%= @survey.user.firstname + ' ' + @survey.user.lastname %></td>
+        </tr>
+        <tr>
+          <th>Category:</th>
+          <td><%= @survey.type_survey.name_type_survey %></td>
+        </tr>
+        <tr>
+          <th>Priority:</th>
+          <td><%= @survey.priority.name_priority %></td>
+        </tr>
+        <tr>
+          <th>Date created:</th>
+          <td><%= @survey.created_at.strftime('%d/%m/%Y') %></td>
+        </tr>
+        <tr>
+          <th>Date closed:</th>
+          <td><%= @survey.date_closed.strftime('%d/%m/%Y') %></td>
+        </tr>
+      </table>
+    </div>
+<% end %>
+<%= render template: 'layouts/application' %>

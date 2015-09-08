@@ -1,7 +1,5 @@
 <% content_for :menu_bar do %>
-    <% if current_user && current_user.employee? %>
-        <%= render 'employee/employees/menubar' %>
-    <% end %>
+    <%= render 'employee/employees/menubar' %>
 <% end %>
 
 <% content_for :content do %>
@@ -41,3 +39,4 @@
       </div>
     </div>
 <% end %>
+<%= render template: 'layouts/application' %>

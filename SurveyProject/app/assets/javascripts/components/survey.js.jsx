@@ -4,9 +4,10 @@ var Survey = React.createClass({
         var type_survey = this.props.type_survey;
         var type_priority = this.props.type_priority;
         var user_author = this.props.user_author;
+        var url_survey = '/employee/surveys/' + survey.id;
         return(
             <div className="survey well">
-                <h3>{ survey.name_survey }</h3>
+                <h3><a href={ url_survey }>{ survey.name_survey }</a></h3>
                 <p>
                     <span className="survey-label">Created by: </span> { user_author.firstname + ' ' + user_author.lastname }
                 </p>

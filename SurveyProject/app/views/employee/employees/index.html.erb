@@ -17,7 +17,7 @@
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.created_at, label_bonus_info: 'Created at: ' } %>
             <% end %>
             <p class="view-all">
-              <%= link_to :employee_recently_created do %>
+              <%= link_to employee_typed_surveys_path(:type => 1) do %>
                   View all <i class="fa fa-angle-double-right"></i>
               <% end %>
             </p>
@@ -37,9 +37,11 @@
             <% @content_widgets[:recent_done].each do |survey| %>
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.created_at, label_bonus_info: 'Done at: ' } %>
             <% end %>
-            <%= link_to :employee_recently_done do %>
-                View all <i class="fa fa-angle-double-right"></i>
+            <p class="view-all">
+              <%= link_to employee_typed_surveys_path(:type => 2) do %>
+                  View all <i class="fa fa-angle-double-right"></i>
             <% end %>
+            </p>
           </div>
         </div>
       </div>
@@ -58,7 +60,10 @@
             <% @content_widgets[:high_prio].each do |survey| %>
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.date_closed, label_bonus_info: 'Closed at: ' } %>
             <% end %>
-            <p class="view-all"><a href="#">View all <i class="fa fa-angle-double-right"></i></a></p>
+            <p class="view-all">
+              <%= link_to employee_typed_surveys_path(:type => 3) do %>
+                  View all <i class="fa fa-angle-double-right"></i>
+              <% end %>
           </div>
         </div>
       </div>
@@ -75,7 +80,10 @@
             <% @content_widgets[:closed_today].each do |survey| %>
                 <%= react_component 'SurveysWidget', { survey: survey, bonus_info: survey.date_closed, label_bonus_info: 'Closed today: ' } %>
             <% end %>
-            <p class="view-all"><a href="#">View all <i class="fa fa-angle-double-right"></i></a></p>
+            <p class="view-all">
+              <%= link_to employee_typed_surveys_path(:type => 4) do %>
+                  View all <i class="fa fa-angle-double-right"></i>
+              <% end %>
           </div>
         </div>
       </div>

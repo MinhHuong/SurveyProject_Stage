@@ -26,34 +26,8 @@ class Employee::SurveysController < ApplicationController
     order_asc_desc = ( filter_criteria == 'date_closed' || filter_criteria == 'created_at' ) ? 'DESC' : 'ASC'
     order_rule = filter_criteria + ' ' + order_asc_desc
 
-    data = nil
-    name_list_surveys = ''
-    case session[:type_list_surveys]
-      # all surveys
-      when 0
-        data = Survey.all
-        name_list_surveys = 'All surveys'
-      # recently created surveys
-      when 1
-        now = Date.today
-        seven_day_ago = (now - 7)
-        data = Survey
-                   .where(:status => true)
-                   .where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day)
-        name_list_surveys = 'Recently created surveys'
-      # recently done surveys
-      when 2
-        # codes
-      # high priority surveys
-      when 3
-        # codes
-      # surveys that will be closed today
-      when 4
-        # codes
-      else
-        data = Survey.all
-        name_list_surveys = 'All surveys'
-    end
+    typed_surveys = get_data_of_typed_surveys(session[:type_list_surveys])
+    data = typed_surveys[:data]
 
     @surveys = data.where(:status => true).includes(:priority, :type_survey, :user).order(order_rule).group_by do |survey|
       case filter_criteria
@@ -68,7 +42,7 @@ class Employee::SurveysController < ApplicationController
 
     @supply_info = {
         total: data.length,
-        name_list_surveys: name_list_surveys,
+        name_list_surveys: typed_surveys[:name_list_surveys],
         filter_criteria: to_readable_name(filter_criteria),
         filter_code: filter_criteria
     }
@@ -77,45 +51,19 @@ class Employee::SurveysController < ApplicationController
 
   # Show survey and all the questions contained within
   def show
-  end
-
-  # display all surveys that are recently created
-  def index_recently_created
-    session[:type_list_surveys] = 1
-    index_typed_surveys
-  end
-
-  def index_recently_done
-    session[:type_list_surveys] = 2
-    index_typed_surveys
+    @survey = Survey.includes(:user, :priority, :type_survey).find(params[:id])
   end
 
   def index_typed_surveys
-    results = Survey.where(:status => true)
-    case session[:type_list_surveys]
-      when 1
-        now = Date.today
-        seven_day_ago = (now - 7)
-        results = results
-                      .where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day)
-        name_list_surveys = 'Recently created surveys'
-      when 2
-        results = results.where(:id => recently_done_surveys_of(session[:user_id]))
-        name_list_surveys = 'Recently done surveys'
-      when 3
-        name_list_surveys = 'High priority'
-      when 4
-        name_list_surveys = 'Surveys that will be closed today'
-      else
-        name_list_surveys = 'All surveys'
-    end
+    typed_surveys = get_data_of_typed_surveys(params[:type])
+    results = typed_surveys[:data]
     @surveys = results
                    .includes(:priority, :type_survey, :user)
                    .order(:name_survey)
                    .group_by{ |survey| survey.name_survey[0] }
     @supply_info = {
         total: results.length,
-        name_list_surveys: name_list_surveys,
+        name_list_surveys: typed_surveys[:name_list_surveys],
         filter_criteria: 'Name'
     }
     render 'index'
@@ -137,16 +85,36 @@ class Employee::SurveysController < ApplicationController
     end
   end
 
-  def recently_done_surveys_of(user_id)
-    now = Date.today
-    seven_day_ago = (now - 7)
-    items = []
-    FinishSurvey
-        .where(:user_id => user_id)
-        .where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day)
-        .each do |item|
-      items << item.survey_id
+  def get_data_of_typed_surveys(type)
+    case type
+      when '0'
+        data = Survey.opened
+        name_list = 'All surveys'
+        session[:type_list_surveys] = '0'
+      when '1'
+        data = Survey.recently_created
+        name_list = 'Recently created surveys'
+        session[:type_list_surveys] = '1'
+      when '2'
+        data = Survey.recently_done(session[:user_id])
+        name_list = 'Recently done surveys'
+        session[:type_list_surveys] = '2'
+      when '3'
+        data = Survey.high_prio
+        name_list = 'High priority surveys'
+        session[:type_list_surveys] = '3'
+      when '4'
+        data = Survey.closed_today
+        name_list = 'Surveys that will be closed today'
+        session[:type_list_surveys] = '4'
+      else
+        data = Survey.opened
+        name_list = 'All surveys'
     end
-    items
+
+    results = {
+        data: data,
+        name_list_surveys: name_list
+    }
   end
 end

@@ -13,15 +13,18 @@ Rails.application.routes.draw do
 
   # Routes for Employees and everything involved
   namespace :employee do
+    ## profile
     get '/home' => 'employees#index', as: :index
     get '/profile/:id' => 'employees#show', as: :profile
     get 'profile/:id/edit' => 'employees#edit', as: :edit_profile
     patch '/profile/:id' => 'employees#update', as: :update_profile
     get '/profile/checkpwd/:id' => 'employees#check_password'
+
+    ## surveys
     get '/surveys' => 'surveys#index', as: :surveys_all
     get '/surveys/filter' => 'surveys#filter', as: :surveys_filtered
-    get '/surveys/recently_created' => 'surveys#index_recently_created', as: :recently_created
-    get '/surveys/recently_done' => 'surveys#index_recently_done', as: :recently_done
+    get '/surveys/typed_list_surveys/:type' => 'surveys#index_typed_surveys', as: :typed_surveys
+    get '/surveys/:id' => 'surveys#show', as: :show_survey
   end
 
   # Routes for Leaders and everything involved

@@ -3,28 +3,18 @@ require 'date'
 
 class Employee::EmployeesController < ApplicationController
   # Show surveys in corresponding widgets
-  # 1. Recently created surveys
-  # 2. Recently done surveys
-  # 3. High-priority surveys
-  # 4. Surveys that will be closed today
   def index
-    all_surveys = Survey.all.where(:status => true)
-
     # recently created surveys
-    now = Date.today
-    seven_day_ago = (now - 7)
-    recent_created = all_surveys.where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day).limit(5)
-
-    # @high_prio = all_surveys.where(:status => true).where(:priority_id => 1)
-    # can use the above, but this way can be more dynamic (more...right)
-    # high priority surveys
-    high_prio = all_surveys.where(:priority_id => (Priority.where(:name_priority => 'High'))).limit(5)
-
-    # surveys that will be closed today
-    closed_today = all_surveys.where(:date_closed => now.beginning_of_day..now.end_of_day).limit(5)
+    recent_created = Survey.recently_created.limit(5)
 
     # recently done surveys
-    recent_done = all_surveys.where(:id => recently_done_surveys_of(session[:user_id])).limit(5)
+    recent_done = Survey.recently_done(session[:user_id]).limit(5)
+
+    # high priority surveys
+    high_prio = Survey.high_prio.limit(5)
+
+    # surveys that will be closed today
+    closed_today = Survey.closed_today.limit(5)
 
     @content_widgets = {
         recent_created: recent_created,
@@ -98,18 +88,5 @@ class Employee::EmployeesController < ApplicationController
       path_img = client_name + '/users/' + user.username + '/' + name
       User.where(:id => user.id).update_all(link_picture: path_img)
     end
-  end
-
-  def recently_done_surveys_of(user_id)
-    now = Date.today
-    seven_day_ago = (now - 7)
-    items = []
-    FinishSurvey
-        .where(:user_id => user_id)
-        .where(:created_at => seven_day_ago.beginning_of_day..now.end_of_day)
-        .each do |item|
-      items << item.survey_id
-    end
-    items
   end
 end
