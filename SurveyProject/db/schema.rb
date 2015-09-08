@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150907085000) do
+ActiveRecord::Schema.define(version: 20150908104217) do
+
+  create_table "choices", force: true do |t|
+    t.text     "content",     null: false
+    t.integer  "question_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "clients", force: true do |t|
     t.string   "name_client",       null: false
@@ -39,6 +46,22 @@ ActiveRecord::Schema.define(version: 20150907085000) do
     t.string "name_priority", null: false
   end
 
+  create_table "questions", force: true do |t|
+    t.text     "content",          null: false
+    t.text     "link_picture"
+    t.integer  "type_question_id", null: false
+    t.integer  "survey_id",        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "responses", force: true do |t|
+    t.integer  "question_id", null: false
+    t.integer  "choice_id",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "surveys", force: true do |t|
     t.string   "name_survey",                   null: false
     t.integer  "type_survey_id",                null: false
@@ -58,6 +81,12 @@ ActiveRecord::Schema.define(version: 20150907085000) do
   end
 
   add_index "sysdiagrams", ["principal_id", "name"], name: "UK_principal_name", unique: true
+
+  create_table "type_questions", force: true do |t|
+    t.string   "name_type_question", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "type_surveys", force: true do |t|
     t.string "name_type_survey", null: false

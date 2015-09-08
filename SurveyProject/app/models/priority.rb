@@ -1,3 +1,3 @@
 class Priority < ActiveRecord::Base
-  has_one :survey
+  has_many :surveys
 end

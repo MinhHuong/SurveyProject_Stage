@@ -3,6 +3,7 @@ class Survey < ActiveRecord::Base
   belongs_to :priority
   belongs_to :user
   has_many :finish_surveys
+  has_many :questions
 
   def self.opened
     all.where(:status => true)
