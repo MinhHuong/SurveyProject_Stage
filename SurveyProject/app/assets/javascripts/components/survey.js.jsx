@@ -36,6 +36,73 @@ var SurveysWidget = React.createClass({
                     <a href="#">{ survey.name_survey }</a> - <span className="info-bonus"> { label_bonus_info } { new Date(bonus_info).toLocaleDateString() } </span>
                 </p>
             </div>
-        )
+        );
+    }
+});
+
+var RadioQuestion = React.createClass({
+   render: function() {
+       var question = this.props.question;
+       var choices = this.props.choices;
+       var item_choices = [];
+       for (var i = 0 ; i < choices.length ; i++) {
+           item_choices.push(
+               <div className="radio">
+                   <label>
+                       <input type="radio" name={ question.id } value={ choices[i].id } /> { choices[i].content }
+                   </label>
+               </div>
+           )
+       }
+       return(
+            <div className="question">
+                <h4>{ question.numero_question }. { question.content }</h4>
+                { item_choices }
+            </div>
+       );
+   }
+});
+
+var CheckboxQuestion = React.createClass({
+   render: function() {
+       var question = this.props.question;
+       var choices = this.props.choices;
+       var item_choices = [];
+       var name_input = question.id + '[]';
+       for (var i = 0 ; i < choices.length ; i++) {
+           item_choices.push(
+               <div className="checkbox">
+                   <label>
+                       <input type="checkbox" name={ name_input } value={ choices[i].id } /> { choices[i].content }
+                   </label>
+               </div>
+           );
+       }
+       return(
+           <div className="question">
+               <h4>{ question.numero_question }. { question.content }</h4>
+               { item_choices }
+           </div>
+       );
+   }
+});
+
+var DropdownQuestion = React.createClass({
+    render: function() {
+        var question = this.props.question;
+        var choices = this.props.choices;
+        var item_choices = [];
+        for (var i = 0 ; i < choices.length ; i++) {
+            item_choices.push(<option value={ choices[i].id }>{ choices[i].content }</option>)
+        }
+        return(
+            <div classNama="question">
+                <h4>{ question.numero_question }. { question.content }</h4>
+                <label for={ question.id }>Select one item:</label>
+                <select name={ question.id } id={ question.id } className="form-control">
+                    { item_choices }
+                </select>
+            </div>
+        );
     }
 });

@@ -51,9 +51,12 @@ class Employee::SurveysController < ApplicationController
 
   # Show survey and all the questions contained within
   def show
-    @survey = Survey.includes(:user, :priority, :type_survey).find(params[:id])
+    @survey = Survey.includes(:user, :priority, :type_survey, :questions).find(params[:id])
+    @questions = @survey.questions.order(:numero_question)
   end
 
+  # show all surveys of a specific type
+  # (recently created / recently done / high priority / closed today)
   def index_typed_surveys
     typed_surveys = get_data_of_typed_surveys(params[:type])
     results = typed_surveys[:data]
@@ -67,6 +70,18 @@ class Employee::SurveysController < ApplicationController
         filter_criteria: 'Name'
     }
     render 'index'
+  end
+
+  def submit_survey
+    @confirmation = []
+    questions = Survey.includes(:questions).find(params[:id]).questions.order(:numero_question)
+    questions.each do |q|
+      param = q.id.to_s.to_sym
+      choices_id = all_to_int(params[param])
+      choices = get_choices(choices_id)
+      add_response(q.id, choices, session[:user_id])
+    end
+    render 'employee/surveys/confirm'
   end
 
   private
@@ -85,6 +100,7 @@ class Employee::SurveysController < ApplicationController
     end
   end
 
+  # Return the corresponding filtered data from database, depending on the passing parameter "type"
   def get_data_of_typed_surveys(type)
     case type
       when '0'
@@ -116,5 +132,28 @@ class Employee::SurveysController < ApplicationController
         data: data,
         name_list_surveys: name_list
     }
+  end
+
+  def add_response(question_id, choices, user_id)
+    choices.each do |choice|
+      Response.create(:question_id => question_id, :choice_id => choice.id, :user_id => user_id)
+    end
+  end
+
+  def all_to_int(obj)
+    if obj.is_a? Array
+      result = []
+      obj.each do |item|
+        number = item.to_i
+        result << number
+      end
+    else
+      result = obj.to_i
+    end
+    result
+  end
+
+  def get_choices(choices_array)
+    Choice.where(:id => choices_array)
   end
 end

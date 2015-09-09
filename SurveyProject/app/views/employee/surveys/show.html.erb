@@ -28,5 +28,23 @@
         </tr>
       </table>
     </div>
+    <div class="zone-questions">
+      <%= form_tag :employee_submit_survey, :method => 'post', :role => 'form' do %>
+          <% @questions.each do |q| %>
+              <% if q.type_question.code_type_question == 'OC' %>
+                  <%= react_component 'RadioQuestion', { question: q, choices: q.choices } %>
+              <% end %>
+              <% if q.type_question.code_type_question == 'MC' %>
+                  <%= react_component 'CheckboxQuestion', { question: q, choices: q.choices } %>
+              <% end %>
+              <% if q.type_question.code_type_question == 'DD' %>
+                  <%= react_component 'DropdownQuestion', { question: q, choices: q.choices } %>
+              <% end %>
+          <% end %>
+          <div class="div-button">
+            <%= submit_tag 'Submit', { class: 'btn btn-success' } %>
+          </div>
+      <% end %>
+    </div>
 <% end %>
 <%= render template: 'layouts/application' %>

@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   has_one :leader
   has_many :surveys
   has_many :finish_surveys
+  has_many :responses
 
   def employee?
     self.permission == 'employee'

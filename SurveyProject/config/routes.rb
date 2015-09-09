@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     get '/surveys/filter' => 'surveys#filter', as: :surveys_filtered
     get '/surveys/typed_list_surveys/:type' => 'surveys#index_typed_surveys', as: :typed_surveys
     get '/surveys/:id' => 'surveys#show', as: :show_survey
+    post '/surveys/:id/submit' => 'surveys#submit_survey', as: :submit_survey
   end
 
   # Routes for Leaders and everything involved
