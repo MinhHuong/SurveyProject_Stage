@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150909081722) do
+ActiveRecord::Schema.define(version: 20150910044206) do
 
   create_table "choices", force: true do |t|
     t.text     "content",     null: false
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20150909081722) do
   create_table "responses", force: true do |t|
     t.integer  "question_id", null: false
     t.integer  "choice_id",   null: false
-    t.integer  "user_id",     null: false
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

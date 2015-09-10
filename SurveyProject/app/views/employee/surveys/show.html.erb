@@ -29,7 +29,7 @@
       </table>
     </div>
     <div class="zone-questions">
-      <%= form_tag :employee_submit_survey, :method => 'post', :role => 'form' do %>
+      <%= form_tag :employee_submit_survey, :method => 'post', :role => 'form', :id => 'form-questions' do %>
           <% @questions.each do |q| %>
               <% if q.type_question.code_type_question == 'OC' %>
                   <%= react_component 'RadioQuestion', { question: q, choices: q.choices } %>

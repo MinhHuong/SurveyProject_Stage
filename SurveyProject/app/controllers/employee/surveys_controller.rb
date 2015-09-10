@@ -73,7 +73,6 @@ class Employee::SurveysController < ApplicationController
   end
 
   def submit_survey
-    @confirmation = []
     questions = Survey.includes(:questions).find(params[:id]).questions.order(:numero_question)
     questions.each do |q|
       param = q.id.to_s.to_sym

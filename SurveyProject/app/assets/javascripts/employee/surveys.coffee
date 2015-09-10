@@ -10,3 +10,17 @@ check_filter_criteria = ->
 
 $ ->
   check_filter_criteria()
+
+  $('#form-questions').submit ->
+    isValid = true
+    $(this).find('.question').each (index, value) ->
+      if $(value).find('input').length != 0
+        valid = $(value).find('input').is(':checked')
+        isValid = isValid and valid
+        if not valid
+          $(value).find('.validation-zone').css('visibility', 'visible')
+        else
+          $(value).find('.validation-zone').css('visibility', 'hidden')
+    return isValid
+
+  return

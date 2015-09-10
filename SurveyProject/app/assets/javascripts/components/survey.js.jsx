@@ -58,6 +58,7 @@ var RadioQuestion = React.createClass({
             <div className="question">
                 <h4>{ question.numero_question }. { question.content }</h4>
                 { item_choices }
+                <p className="validation-zone"><i className="fa fa-exclamation-circle"></i> Please answer this question</p>
             </div>
        );
    }
@@ -82,6 +83,7 @@ var CheckboxQuestion = React.createClass({
            <div className="question">
                <h4>{ question.numero_question }. { question.content }</h4>
                { item_choices }
+               <p className="validation-zone"><i className="fa fa-exclamation-circle"></i> Please answer this question</p>
            </div>
        );
    }
@@ -96,7 +98,7 @@ var DropdownQuestion = React.createClass({
             item_choices.push(<option value={ choices[i].id }>{ choices[i].content }</option>)
         }
         return(
-            <div classNama="question">
+            <div className="question">
                 <h4>{ question.numero_question }. { question.content }</h4>
                 <label for={ question.id }>Select one item:</label>
                 <select name={ question.id } id={ question.id } className="form-control">

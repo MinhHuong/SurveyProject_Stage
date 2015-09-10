@@ -105,6 +105,17 @@
   .question {
     margin-top: 36px;
     margin-bottom: 36px;
+
+    h4 {
+      font-weight: bold;
+    }
+
+    .validation-zone {
+      color: red;
+      font-style: italic;
+      font-size: 110%;
+      visibility: hidden;
+    }
   }
 
   .div-button {
