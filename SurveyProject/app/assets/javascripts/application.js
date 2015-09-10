@@ -14,8 +14,7 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui
-//= require jquery.validate
-//= require jquery.validate.additional-methods
+//= require jquery.steps
 //= require bootstrap
 //= require turbolinks
 //= require react

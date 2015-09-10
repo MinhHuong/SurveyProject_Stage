@@ -5,9 +5,26 @@ var Survey = React.createClass({
         var type_priority = this.props.type_priority;
         var user_author = this.props.user_author;
         var url_survey = '/employee/surveys/' + survey.id;
+        var done_surveys = this.props.done_surveys;
+        var is_done = false;
+        for (var i = 0 ; i < done_surveys.length ; i++) {
+            if (done_surveys[i].survey_id == survey.id) {
+                is_done = true;
+                break;
+            }
+        }
+
+        var tick = null;
+        var title = <a href={ url_survey }>{ survey.name_survey }</a>;
+        if (is_done) {
+            tick = <i className="fa fa-check-circle done"></i>
+            title = <a className="done-survey-title">{ survey.name_survey }</a>
+        }
         return(
             <div className="survey well">
-                <h3><a href={ url_survey }>{ survey.name_survey }</a></h3>
+                <h3>
+                    { title } { tick }
+                </h3>
                 <p>
                     <span className="survey-label">Created by: </span> { user_author.firstname + ' ' + user_author.lastname }
                 </p>

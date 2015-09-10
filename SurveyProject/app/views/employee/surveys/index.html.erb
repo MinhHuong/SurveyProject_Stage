@@ -19,9 +19,15 @@
           <% @surveys.each do |key, items| %>
               <div class="group-surveys">
                 <h3 class="label-group"><%= key %></h3>
-                    <% items.each do |survey| %>
-                        <%= react_component 'Survey', { survey: survey, type_priority: survey.priority, type_survey: survey.type_survey, user_author: survey.user }%>
-                    <% end %>
+                <% items.each do |survey| %>
+                    <%= react_component 'Survey',
+                                        { survey: survey,
+                                          type_priority: survey.priority,
+                                          type_survey: survey.type_survey,
+                                          user_author: survey.user,
+                                          done_surveys: survey.finish_surveys.where(:user_id => session[:user_id])
+                                        }%>
+                <% end %>
               </div>
           <% end %>
         </div>

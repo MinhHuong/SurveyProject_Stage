@@ -62,6 +62,20 @@
             margin-top: 4px;
           }
 
+          i.done {
+            color: green;
+          }
+
+          a.done-survey-title {
+            color: #585858;
+          }
+
+          a.done-survey-title:hover {
+            color: #585858;
+            text-decoration: none;
+            cursor: default;
+          }
+
           .survey-label {
             font-weight: bold;
           }

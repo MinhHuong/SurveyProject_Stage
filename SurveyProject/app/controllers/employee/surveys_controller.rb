@@ -6,7 +6,7 @@ class Employee::SurveysController < ApplicationController
     results = Survey.all
                    .where(:status => true)
     @surveys = results
-                   .includes(:priority, :type_survey, :user)
+                   .includes(:priority, :type_survey, :user, :finish_surveys)
                    .order(:name_survey)
                    .group_by{ |survey| survey.name_survey[0] }
     @supply_info = {
@@ -80,6 +80,7 @@ class Employee::SurveysController < ApplicationController
       choices = get_choices(choices_id)
       add_response(q.id, choices, session[:user_id])
     end
+    close_survey_of(session[:user_id], params[:id])
     render 'employee/surveys/confirm'
   end
 
@@ -139,6 +140,10 @@ class Employee::SurveysController < ApplicationController
     end
   end
 
+  def close_survey_of(user_id, survey_id)
+    FinishSurvey.create(:survey_id => survey_id, :user_id => user_id)
+  end
+
   def all_to_int(obj)
     if obj.is_a? Array
       result = []
@@ -154,5 +159,9 @@ class Employee::SurveysController < ApplicationController
 
   def get_choices(choices_array)
     Choice.where(:id => choices_array)
+  end
+
+  def get_finished_surveys_of(user_id)
+    FinishSurvey.finish_surveys_of(user_id)
   end
 end

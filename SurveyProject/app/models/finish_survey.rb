@@ -2,6 +2,14 @@ class FinishSurvey < ActiveRecord::Base
   belongs_to :user
   belongs_to :survey
 
+  def self.finish_surveys_of(user_id)
+    items = []
+    FinishSurvey.where(:user_id => user_id).each do |item|
+      items << item.survey_id
+    end
+    items
+  end
+
   def self.recently_done_surveys_of(user_id)
     now = Date.today
     one_week_ago = (now - 7)
