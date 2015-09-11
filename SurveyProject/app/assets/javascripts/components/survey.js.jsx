@@ -62,6 +62,7 @@ var RadioQuestion = React.createClass({
        var question = this.props.question;
        var choices = this.props.choices;
        var item_choices = [];
+       var id_question = "question" + question.numero_question;
        for (var i = 0 ; i < choices.length ; i++) {
            item_choices.push(
                <div className="radio">
@@ -72,7 +73,7 @@ var RadioQuestion = React.createClass({
            )
        }
        return(
-            <div className="question">
+            <div id={ id_question } className="question">
                 <h4>{ question.numero_question }. { question.content }</h4>
                 { item_choices }
                 <p className="validation-zone"><i className="fa fa-exclamation-circle"></i> Please answer this question</p>
@@ -87,6 +88,7 @@ var CheckboxQuestion = React.createClass({
        var choices = this.props.choices;
        var item_choices = [];
        var name_input = question.id + '[]';
+       var id_question = "question" + question.numero_question;
        for (var i = 0 ; i < choices.length ; i++) {
            item_choices.push(
                <div className="checkbox">
@@ -97,7 +99,7 @@ var CheckboxQuestion = React.createClass({
            );
        }
        return(
-           <div className="question">
+           <div id={ id_question } className="question">
                <h4>{ question.numero_question }. { question.content }</h4>
                { item_choices }
                <p className="validation-zone"><i className="fa fa-exclamation-circle"></i> Please answer this question</p>
@@ -111,11 +113,12 @@ var DropdownQuestion = React.createClass({
         var question = this.props.question;
         var choices = this.props.choices;
         var item_choices = [];
+        var id_question = "question" + question.numero_question;
         for (var i = 0 ; i < choices.length ; i++) {
             item_choices.push(<option value={ choices[i].id }>{ choices[i].content }</option>)
         }
         return(
-            <div className="question">
+            <div id={ id_question } className="question">
                 <h4>{ question.numero_question }. { question.content }</h4>
                 <label for={ question.id }>Select one item:</label>
                 <select name={ question.id } id={ question.id } className="form-control">

@@ -29,6 +29,16 @@
       </table>
     </div>
     <div class="zone-questions">
+      <div class="progress">
+        <div id="progress-questions" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <span id="progress-percent"></span>
+        </div>
+      </div>
+      <div class="prev-next">
+        <a href="" class="btn btn-info" id="btn-prev">Previous</a>
+        <a href="" class="btn btn-primary" id="btn-next">Next</a>
+      </div>
       <%= form_tag :employee_submit_survey, :method => 'post', :role => 'form', :id => 'form-questions' do %>
           <% @questions.each do |q| %>
               <% if q.type_question.code_type_question == 'OC' %>
@@ -42,7 +52,7 @@
               <% end %>
           <% end %>
           <div class="div-button">
-            <%= submit_tag 'Submit', { class: 'btn btn-success' } %>
+            <%= submit_tag 'Submit', { class: 'btn btn-success', id: 'btn-submit' } %>
           </div>
       <% end %>
     </div>

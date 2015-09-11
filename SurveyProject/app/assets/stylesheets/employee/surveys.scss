@@ -116,9 +116,13 @@
 .zone-questions {
   padding: 0 36px 15px 36px;
 
+  #form-questions {
+    clear: both;
+  }
+
   .question {
     margin-top: 36px;
-    margin-bottom: 36px;
+    margin-bottom: 30px;
 
     h4 {
       font-weight: bold;
@@ -132,13 +136,25 @@
     }
   }
 
+  .prev-next {
+    a {
+      width: 100px;
+      float: left;
+      margin-left: 9px;
+      margin-right: 9px;
+      margin-bottom: 36px;
+    }
+  }
+
   .div-button {
+    clear: both;
     text-align: center;
     margin-top: 45px;
     margin-bottom: 20px;
 
     input[type=submit] {
       width: 100px;
+      visibility: hidden;
     }
   }
 }

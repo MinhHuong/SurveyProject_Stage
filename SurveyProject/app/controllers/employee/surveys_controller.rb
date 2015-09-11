@@ -51,8 +51,12 @@ class Employee::SurveysController < ApplicationController
 
   # Show survey and all the questions contained within
   def show
-    @survey = Survey.includes(:user, :priority, :type_survey, :questions).find(params[:id])
-    @questions = @survey.questions.order(:numero_question)
+    if survey_is_not_finished(params[:id], session[:user_id])
+      @survey = Survey.includes(:user, :priority, :type_survey, :questions).find(params[:id])
+      @questions = @survey.questions.order(:numero_question)
+    else
+      render 'employee/surveys/confirm_fail'
+    end
   end
 
   # show all surveys of a specific type
@@ -81,7 +85,7 @@ class Employee::SurveysController < ApplicationController
       add_response(q.id, choices, session[:user_id])
     end
     close_survey_of(session[:user_id], params[:id])
-    render 'employee/surveys/confirm'
+    render 'employee/surveys/confirm_success'
   end
 
   private
@@ -163,5 +167,10 @@ class Employee::SurveysController < ApplicationController
 
   def get_finished_surveys_of(user_id)
     FinishSurvey.finish_surveys_of(user_id)
+  end
+
+  def survey_is_not_finished(survey_id, user_id)
+    done_survey = FinishSurvey.where(:survey_id => survey_id).where(:user_id => user_id)
+    done_survey.nil?
   end
 end
