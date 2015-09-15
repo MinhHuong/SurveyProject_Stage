@@ -58,6 +58,42 @@ var SurveysWidget = React.createClass({
     }
 });
 
+var SurveyInfo = React.createClass({
+    render: function() {
+        var survey = this.props.survey;
+        var type_survey = this.props.type_survey;
+        var type_priority = this.props.type_priority;
+        var author = this.props.user_author;
+        return(
+            <div id="big-info-survey" className="well">
+                <h2>{ survey.name_survey }</h2>
+                    <table>
+                        <tr>
+                            <th>Author:</th>
+                            <td>{ author.firstname + ' ' + author.lastname }</td>
+                        </tr>
+                        <tr>
+                            <th>Category:</th>
+                            <td>{ type_survey.name_type_survey }</td>
+                        </tr>
+                        <tr>
+                            <th>Priority:</th>
+                            <td>{ type_priority.name_priority }</td>
+                        </tr>
+                        <tr>
+                            <th>Date created:</th>
+                            <td>{ new Date(survey.created_at).toLocaleDateString() }</td>
+                        </tr>
+                        <tr>
+                            <th>Date closed:</th>
+                            <td>{ new Date(survey.date_closed).toLocaleDateString() }</td>
+                        </tr>
+                    </table>
+            </div>
+        );
+    }
+});
+
 var RadioQuestion = React.createClass({
    render: function() {
        var question = this.props.question;

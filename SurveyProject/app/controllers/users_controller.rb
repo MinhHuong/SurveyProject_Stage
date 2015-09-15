@@ -1,14 +1,13 @@
-class UsersController < ApplicationController
-  def index
-    @company = Client.find(1)
-    @employee = Employee.find(1)
-    @user = User.find(@employee.id)
-  end
+require 'fileutils'
+require 'date'
 
+class UsersController < ApplicationController
+  # temporary
   def new
     @user = User.new
   end
 
+  # temporary
   def create
     @user = User.new(user_params)
     if @user.save
@@ -47,27 +46,8 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit
-  end
-
-  def update
-  end
-
-  def profile
-    url_redirect = ''
-    case current_user.permission
-      when 'employee'
-        url_redirect = '/employee/profile/' + params[:id]
-      when 'leader'
-        url_redirect = '/leader/profile/' + params[:id]
-      else
-    end
-    redirect_to url_redirect
-  end
-
   def check_password
     @user = User.find(params[:id])
-    # old_pwd = request.post[:oldPwd]
     old_pwd = params[:oldPwd]
     if @user.authenticate(old_pwd)
       result = true
@@ -77,12 +57,58 @@ class UsersController < ApplicationController
     render status: 200, json: result.to_json
   end
 
+  def show
+    @user = User.find(params[:id])
+  end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  # Update User's profile (including changing password and uploading pictures)
+  def update
+    @user = User.find(params[:id])
+    client = Client.find(@user.clients_id)
+
+    if @user != nil and client != nil
+      upload_file(params[:upload], @user, client.name_client)
+    end
+
+    if @user.update_attributes(user_edit_params)
+      session[:name_user] = @user.firstname + ' ' + @user.lastname
+
+      # !!! If using RENDER instead of REDIRECT, there will be problem
+      # (request not finishing...I dunno, but use this and problems solved)
+      redirect_to '/users/profile/' << params[:id]
+    else
+      render 'edit'
+    end
+  end
+
   private
   def user_params
     params.require(:user).permit(:firstname, :lastname, :username, :password, :clients_id, :permission)
   end
 
-  def user_employee_params
+  def user_edit_params
     params.require(:user).permit(:firstname, :lastname, :password)
+  end
+
+  # Function that manages the picture uploading
+  # Keep original name of the pictures
+  # Save it into the right directory, following this rule:
+  # <company_name>/users/<username>/
+  def upload_file(upload, user, client_name)
+    if upload != nil
+      if user.link_picture != nil
+        File.delete('public/images/' << user.link_picture)
+      end
+      name = upload['img'].original_filename
+      directory = 'public/images/' + client_name + '/users/' + user.username
+      path = File.join(directory, name)
+      File.open(path, 'wb') { |f| f.write(upload['img'].read) }
+      path_img = client_name + '/users/' + user.username + '/' + name
+      User.where(:id => user.id).update_all(link_picture: path_img)
+    end
   end
 end

@@ -1,0 +1,47 @@
+<% content_for :menu_bar do %>
+    <%= render @menubar %>
+<% end %>
+
+<% content_for :content do %>
+    <!-- Information of this survey -->
+    <%= react_component 'SurveyInfo',
+                        { survey: @survey,
+                          type_priority: @survey.priority,
+                          type_survey: @survey.type_survey,
+                          user_author: @survey.user
+                        }
+    %>
+    <!-- Main part : questions -->
+    <div class="zone-questions">
+      <!-- Progress bar -->
+      <div class="progress">
+        <div id="progress-questions" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <span id="progress-percent"></span>
+        </div>
+      </div>
+      <!-- 2 buttons : Previous and Next -->
+      <div class="prev-next">
+        <a href="" class="btn btn-info" id="btn-prev">Previous</a>
+        <a href="" class="btn btn-primary" id="btn-next">Next</a>
+      </div>
+      <!-- Question (depending on type of Question) -->
+      <%= form_tag "#{@survey.id}/submit", :method => 'post', :role => 'form', :id => 'form-questions' do %>
+          <% @survey.questions.each do |q| %>
+              <% if q.type_question.code_type_question == 'OC' %>
+                  <%= react_component 'RadioQuestion', { question: q, choices: q.choices } %>
+              <% end %>
+              <% if q.type_question.code_type_question == 'MC' %>
+                  <%= react_component 'CheckboxQuestion', { question: q, choices: q.choices } %>
+              <% end %>
+              <% if q.type_question.code_type_question == 'DD' %>
+                  <%= react_component 'DropdownQuestion', { question: q, choices: q.choices } %>
+              <% end %>
+          <% end %>
+          <div class="div-button">
+            <%= submit_tag 'Submit', { class: 'btn btn-success', id: 'btn-submit' } %>
+          </div>
+      <% end %>
+    </div>
+<% end %>
+<%= render template: 'layouts/application' %>

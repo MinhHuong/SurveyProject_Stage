@@ -9,8 +9,10 @@ Rails.application.routes.draw do
   post '/login' => 'sessions#create'
   delete '/logout' => 'sessions#destroy', as: :logout
 
-  get '/users/profile:id' => 'users#profile', as: :user_profile
+  get '/users/profile/:id' => 'users#show', as: :user_profile
   post '/users/profile/checkpwd/:id' => 'users#check_password'
+  get '/users/profile/:id/edit' => 'users#edit', as: :edit_profile
+  patch '/users/profile/:id' => 'users#update', as: :update_profile
 
   resources :clients, :users
 
@@ -18,10 +20,9 @@ Rails.application.routes.draw do
   namespace :employee do
     ## profile
     get '/home' => 'employees#index', as: :index
-    get '/profile/:id' => 'employees#show', as: :profile
-    get 'profile/:id/edit' => 'employees#edit', as: :edit_profile
-    patch '/profile/:id' => 'employees#update', as: :update_profile
-    patch '/profile/checkpwd/:id' => 'employees#check_password'
+    #get '/profile/:id' => 'employees#show', as: :profile
+    #get 'profile/:id/edit' => 'employees#edit', as: :edit_profile
+    #patch '/profile/:id' => 'employees#update', as: :update_profile
 
     ## surveys
     get '/surveys' => 'surveys#index', as: :surveys_all
@@ -35,9 +36,6 @@ Rails.application.routes.draw do
   namespace :leader do
     ## profile
     get '/home' => 'leaders#index', as: :index
-    get '/profile/:id' => 'leaders#show', as: :profile
-    patch '/profile/:id' => 'leaders#update', as: :update_profile
-    get '/profile/:id/edit' => 'leaders#edit', as: :edit_profile
 
     ## surveys
     get '/surveys' => 'surveys#index', as: :surveys_all

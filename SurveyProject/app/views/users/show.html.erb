@@ -1,0 +1,48 @@
+<% content_for :menu_bar do %>
+    <% if current_user.permission == 'employee' %>
+        <%= render 'employee/employees/menubar' %>
+    <% else%>
+        <%= render 'leader/leaders/menubar' %>
+    <% end %>
+<% end %>
+
+<% content_for :content do %>
+    <h1>My profile</h1>
+    <div class="my-profile row">
+      <div class="col-sm-4" id="zone-picture">
+        <%= image_tag(@user.link_picture, :alt => 'Employee') %>
+      </div>
+      <div class="col-sm-8" id="zone-info">
+        <table>
+          <tr>
+            <th>Firstname</th>
+            <td><%= @user.firstname %></td>
+          </tr>
+          <tr>
+            <th>Lastname</th>
+            <td><%= @user.lastname %></td>
+          </tr>
+          <tr>
+            <th>Login</th>
+            <td><%= @user.username %></td>
+          </tr>
+          <tr>
+            <th>Password</th>
+            <td>***</td>
+          </tr>
+          <tr>
+            <th>Permission</th>
+            <td>Employee</td>
+          </tr>
+          <tr>
+            <th>Date joined</th>
+            <td><%= @user.created_at %></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="zone-button">
+      <%= link_to 'Edit', edit_profile_path(@user_id), class: 'btn btn-primary' %>
+    </div>
+<% end %>
+<%= render template: 'layouts/application' %>

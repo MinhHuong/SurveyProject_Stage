@@ -54,7 +54,9 @@
   </nav>
 
   <div id="content-wrapper">
-    <div id="menubar"><%= content_for?(:menu_bar) ? yield(:menu_bar) : nil %></div>
+    <div id="menubar">
+      <%= content_for?(:menu_bar) ? yield(:menu_bar) : nil %>
+    </div>
     <hr>
     <div id='content'><%= content_for?(:content) ? yield(:content) : yield %></div>
   </div>

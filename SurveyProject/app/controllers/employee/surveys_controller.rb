@@ -1,4 +1,4 @@
-class Employee::SurveysController < ApplicationController
+class Employee::SurveysController < SurveysController
   before_action :require_employee, only: [:index, :show]
 
   # display all surveys, ordered by Name (default)
@@ -49,16 +49,6 @@ class Employee::SurveysController < ApplicationController
     render 'index'
   end
 
-  # Show survey and all the questions contained within
-  def show
-    if survey_is_not_finished(params[:id], session[:user_id])
-      @survey = Survey.includes(:user, :priority, :type_survey, :questions).find(params[:id])
-      @questions = @survey.questions.order(:numero_question)
-    else
-      render 'employee/surveys/confirm_fail'
-    end
-  end
-
   # show all surveys of a specific type
   # (recently created / recently done / high priority / closed today)
   def index_typed_surveys
@@ -76,16 +66,14 @@ class Employee::SurveysController < ApplicationController
     render 'index'
   end
 
+  def show
+    @menubar = 'employee/employees/menubar'
+    super('surveys/confirm_fail')
+  end
+
   def submit_survey
-    questions = Survey.includes(:questions).find(params[:id]).questions.order(:numero_question)
-    questions.each do |q|
-      param = q.id.to_s.to_sym
-      choices_id = all_to_int(params[param])
-      choices = get_choices(choices_id)
-      add_response(q.id, choices, session[:user_id])
-    end
-    close_survey_of(session[:user_id], params[:id])
-    render 'employee/surveys/confirm_success'
+    @menubar = 'employee/employees/menubar'
+    super('surveys/confirm_success')
   end
 
   private
@@ -121,24 +109,5 @@ class Employee::SurveysController < ApplicationController
         data: data,
         name_list_surveys: name_list
     }
-  end
-
-  def add_response(question_id, choices, user_id)
-    choices.each do |choice|
-      Response.create(:question_id => question_id, :choice_id => choice.id, :user_id => user_id)
-    end
-  end
-
-  def close_survey_of(user_id, survey_id)
-    FinishSurvey.create(:survey_id => survey_id, :user_id => user_id)
-  end
-
-  def get_choices(choices_array)
-    Choice.where(:id => choices_array)
-  end
-
-  def survey_is_not_finished(survey_id, user_id)
-    done_survey = FinishSurvey.where(:survey_id => survey_id).where(:user_id => user_id)
-    done_survey.length == 0
   end
 end
