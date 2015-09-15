@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   post '/login' => 'sessions#create'
   delete '/logout' => 'sessions#destroy', as: :logout
 
+  get '/users/profile:id' => 'users#profile', as: :user_profile
+  post '/users/profile/checkpwd/:id' => 'users#check_password'
+
   resources :clients, :users
 
   # Routes for Employees and everything involved
@@ -18,7 +21,7 @@ Rails.application.routes.draw do
     get '/profile/:id' => 'employees#show', as: :profile
     get 'profile/:id/edit' => 'employees#edit', as: :edit_profile
     patch '/profile/:id' => 'employees#update', as: :update_profile
-    get '/profile/checkpwd/:id' => 'employees#check_password'
+    patch '/profile/checkpwd/:id' => 'employees#check_password'
 
     ## surveys
     get '/surveys' => 'surveys#index', as: :surveys_all
@@ -30,6 +33,16 @@ Rails.application.routes.draw do
 
   # Routes for Leaders and everything involved
   namespace :leader do
+    ## profile
     get '/home' => 'leaders#index', as: :index
+    get '/profile/:id' => 'leaders#show', as: :profile
+    patch '/profile/:id' => 'leaders#update', as: :update_profile
+    get '/profile/:id/edit' => 'leaders#edit', as: :edit_profile
+
+    ## surveys
+    get '/surveys' => 'surveys#index', as: :surveys_all
+    get '/surveys/filter' => 'surveys#filter', as: :surveys_filtered
+    get '/surveys/:id' => 'surveys#show', as: :show_survey
+    post '/surveys/:id/submit' => 'surveys#submit_survey', as: :submit_survey
   end
 end

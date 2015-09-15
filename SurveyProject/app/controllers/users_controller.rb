@@ -53,6 +53,30 @@ class UsersController < ApplicationController
   def update
   end
 
+  def profile
+    url_redirect = ''
+    case current_user.permission
+      when 'employee'
+        url_redirect = '/employee/profile/' + params[:id]
+      when 'leader'
+        url_redirect = '/leader/profile/' + params[:id]
+      else
+    end
+    redirect_to url_redirect
+  end
+
+  def check_password
+    @user = User.find(params[:id])
+    # old_pwd = request.post[:oldPwd]
+    old_pwd = params[:oldPwd]
+    if @user.authenticate(old_pwd)
+      result = true
+    else
+      result = false
+    end
+    render status: 200, json: result.to_json
+  end
+
   private
   def user_params
     params.require(:user).permit(:firstname, :lastname, :username, :password, :clients_id, :permission)

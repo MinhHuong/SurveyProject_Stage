@@ -12,7 +12,7 @@ class Survey < ActiveRecord::Base
   def self.recently_created
     now = Date.today
     one_week_ago = (now-14)
-    all.where(:status => true).where(:created_at => one_week_ago.beginning_of_day..now.end_of_day)
+    all.where(:created_at => one_week_ago.beginning_of_day..now.end_of_day)
   end
 
   def self.recently_done(user_id)
@@ -20,11 +20,11 @@ class Survey < ActiveRecord::Base
   end
 
   def self.high_prio
-    all.where(:status => true).where(:priority_id => (Priority.where(:name_priority => 'High')))
+    all.where(:priority_id => (Priority.where(:name_priority => 'High')))
   end
 
   def self.closed_today
     now = Date.today
-    all.where(:status => true).where(:date_closed => now.beginning_of_day..now.end_of_day)
+    all.where(:date_closed => now.beginning_of_day..now.end_of_day)
   end
 end

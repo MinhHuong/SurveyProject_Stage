@@ -1,0 +1,49 @@
+<% content_for :menu_bar do %>
+    <%= render 'leader/leaders/menubar' %>
+<% end %>
+
+<% content_for :content do %>
+    <div class="row" id="list-surveys">
+      <div class="page-content col-sm-9" >
+        <div class="page-content-header">
+          <div class="info-left">
+            <h2><%= @supply_info[:name_list_surveys] %></h2>
+            <p>Sorted by: <%= @supply_info[:filter_criteria] %></p>
+            <span id="filter-code" style="display: none;"><%= @supply_info[:filter_code] %></span>
+          </div>
+          <div class="info-right">
+            <h3><%= @supply_info[:total] %> surveys</h3>
+          </div>
+        </div>
+        <div class="page-content-list">
+          <% @surveys.each do |key, items| %>
+              <div class="group-surveys">
+                <h3 class="label-group"><%= key %></h3>
+                <% items.each do |survey| %>
+                    <%= react_component 'SurveyLeader',
+                                        { survey: survey,
+                                          type_priority: survey.priority,
+                                          type_survey: survey.type_survey,
+                                          user_author: survey.user,
+                                          done_surveys: survey.finish_surveys.where(:user_id => session[:user_id])
+                                        }%>
+                <% end %>
+              </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="rigth-panel col-sm-3 well">
+        <h2>Filter</h2>
+        <%= form_tag :leader_surveys_filtered, :id => 'filter_form', :method => 'get', :role => 'form' do %>
+            <%= radio_button_tag 'filter_criteria', 'created_at' %><%= label_tag 'filter_criteria_created_at', 'Date created' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'date_closed' %><%= label_tag 'filter_criteria_date_closed', 'Date closed' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'name_survey', true %><%= label_tag 'filter_criteria_name_survey', 'Name' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'type_survey_id' %><%= label_tag 'filter_criteria_type_survey_id', 'Category' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'priority_id' %><%= label_tag 'filter_criteria_priority_id', 'Priority' %> <br>
+            <%= radio_button_tag 'filter_criteria', 'status' %><%= label_tag 'filter_criteria_opened', 'Opened' %> <br>
+            <%= submit_tag 'Filter', { class: 'btn btn-success' }%>
+        <% end %>
+      </div>
+    </div>
+<% end %>
+<%= render template: 'layouts/application' %>

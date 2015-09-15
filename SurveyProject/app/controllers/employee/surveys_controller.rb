@@ -29,7 +29,7 @@ class Employee::SurveysController < ApplicationController
     typed_surveys = get_data_of_typed_surveys(session[:type_list_surveys])
     data = typed_surveys[:data]
 
-    @surveys = data.where(:status => true).includes(:priority, :type_survey, :user).order(order_rule).group_by do |survey|
+    @surveys = data.includes(:priority, :type_survey, :user).order(order_rule).group_by do |survey|
       case filter_criteria
         when 'name_survey' then survey.name_survey[0].upcase
         when 'priority_id' then survey.priority.name_priority
@@ -89,21 +89,6 @@ class Employee::SurveysController < ApplicationController
   end
 
   private
-  # Change code of filter to some readable name
-  # eg: name --> Name, dateclosed --> Date closed
-  # used to displat the selected critaria in views
-  def to_readable_name(name)
-    case name
-      when 'name_survey' then 'Title of survey'
-      when 'created_at' then 'Date created'
-      when 'date_closed' then 'Date closed'
-      when 'status' then 'Status'
-      when 'priority_id' then 'Priority'
-      when 'type_survey_id' then 'Category'
-      else 'Undefined'
-    end
-  end
-
   # Return the corresponding filtered data from database, depending on the passing parameter "type"
   def get_data_of_typed_surveys(type)
     case type
@@ -112,7 +97,7 @@ class Employee::SurveysController < ApplicationController
         name_list = 'All surveys'
         session[:type_list_surveys] = '0'
       when '1'
-        data = Survey.recently_created
+        data = Survey.recently_created.where(:status => true)
         name_list = 'Recently created surveys'
         session[:type_list_surveys] = '1'
       when '2'
@@ -120,11 +105,11 @@ class Employee::SurveysController < ApplicationController
         name_list = 'Recently done surveys'
         session[:type_list_surveys] = '2'
       when '3'
-        data = Survey.high_prio
+        data = Survey.high_prio.where(:status => true)
         name_list = 'High priority surveys'
         session[:type_list_surveys] = '3'
       when '4'
-        data = Survey.closed_today
+        data = Survey.closed_today.where(:status => true)
         name_list = 'Surveys that will be closed today'
         session[:type_list_surveys] = '4'
       else
@@ -148,29 +133,12 @@ class Employee::SurveysController < ApplicationController
     FinishSurvey.create(:survey_id => survey_id, :user_id => user_id)
   end
 
-  def all_to_int(obj)
-    if obj.is_a? Array
-      result = []
-      obj.each do |item|
-        number = item.to_i
-        result << number
-      end
-    else
-      result = obj.to_i
-    end
-    result
-  end
-
   def get_choices(choices_array)
     Choice.where(:id => choices_array)
   end
 
-  def get_finished_surveys_of(user_id)
-    FinishSurvey.finish_surveys_of(user_id)
-  end
-
   def survey_is_not_finished(survey_id, user_id)
     done_survey = FinishSurvey.where(:survey_id => survey_id).where(:user_id => user_id)
-    done_survey.nil?
+    done_survey.length == 0
   end
 end

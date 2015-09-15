@@ -1,0 +1,45 @@
+<% content_for :menu_bar do %>
+    <%= render 'leader/leaders/menubar' %>
+<% end %>
+
+<% content_for :content do %>
+    <h3>My profile</h3>
+    <div class="my-profile row">
+      <div class="col-sm-4" id="zone-picture">
+        <%= image_tag(@leader.link_picture, :alt => 'Leader') %>
+      </div>
+      <div class="col-sm-8" id="zone-info">
+        <table>
+          <tr>
+            <th>Firstname</th>
+            <td><%= @leader.firstname %></td>
+          </tr>
+          <tr>
+            <th>Lastname</th>
+            <td><%= @leader.lastname %></td>
+          </tr>
+          <tr>
+            <th>Login</th>
+            <td><%= @leader.username %></td>
+          </tr>
+          <tr>
+            <th>Password</th>
+            <td>***</td>
+          </tr>
+          <tr>
+            <th>Permission</th>
+            <td>Leader</td>
+          </tr>
+          <tr>
+            <th>Date joined</th>
+            <td><%= @leader.created_at %></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="zone-button">
+      <%= link_to 'Edit', leader_edit_profile_path(@user_id), class: 'btn btn-primary' %>
+    </div>
+<% end %>
+
+<%= render template: 'layouts/application' %>
