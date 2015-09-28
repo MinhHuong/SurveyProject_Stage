@@ -12,7 +12,7 @@ $ ->
       'Change': ->
         $.ajax({
           type: 'POST',
-          url: '/users/profile/checkpwd/' + $('#user_id').val(),
+          url: '/profile/checkpwd',
           data: { oldPwd: $('#oldpwd').val() },
           success: (data) ->
             # if the old password is valid

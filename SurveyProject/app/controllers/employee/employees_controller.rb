@@ -1,4 +1,6 @@
 class Employee::EmployeesController < UsersController
+  before_action :require_employee
+
   # Show surveys in corresponding widgets
   def index
     # recently created surveys

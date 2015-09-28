@@ -32,7 +32,7 @@
           </tr>
           <tr>
             <th>Permission</th>
-            <td>Employee</td>
+            <td><%= @user.permission.capitalize %></td>
           </tr>
           <tr>
             <th>Date joined</th>
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="zone-button">
-      <%= link_to 'Edit', edit_profile_path(@user_id), class: 'btn btn-primary' %>
+      <%= link_to 'Edit', :edit_profile, class: 'btn btn-primary' %>
     </div>
 <% end %>
 <%= render template: 'layouts/application' %>

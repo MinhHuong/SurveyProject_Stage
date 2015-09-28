@@ -54,6 +54,19 @@ class Leader::SurveysController < SurveysController
     render 'index'
   end
 
+  def new
+    @survey = Survey.new
+  end
+
+  def create
+    @survey = Survey.new(survey_params)
+    if @survey.save
+      render 'leader/leaders/index'
+    else
+      redirect_to '/leader/surveys/new'
+    end
+  end
+
   def show
     @menubar = 'leader/leaders/menubar'
     super('surveys/confirm_fail')
@@ -62,5 +75,17 @@ class Leader::SurveysController < SurveysController
   def submit_survey
     @menubar = 'leader/leaders/menubar'
     super('surveys/confirm_success')
+  end
+
+  private
+  def survey_params
+    params.require(:survey).permit(
+        :name_survey,
+        :date_closed,
+        :type_survey_id,
+        :priority_id,
+        :user_id,
+        :status => true
+    )
   end
 end

@@ -1,0 +1,42 @@
+<% content_for :menu_bar do %>
+    <%= render 'leader/leaders/menubar' %>
+<% end %>
+
+<% content_for :content do %>
+    <h2>New survey</h2>
+    <%= form_for(@survey, method: :post, :url => '/leader/surveys', html: { class: 'form-horizontal', role: 'form', multipart: true}) do |f| %>
+        <fieldset>
+          <legend>General informations</legend>
+          <div class="form-group">
+            <%= f.label :name_survey, class: 'control-label col-sm-2' %>
+            <div class="col-sm-9">
+              <%= f.text_field :name_survey, class: 'form-control' %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :type_survey_id, class: 'control-label col-sm-2' %>
+            <div class="col-sm-9">
+              <%= f.collection_select :type_survey_id, TypeSurvey.all, :id, :name_type_survey, {}, { class: 'form-control' } %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :priority_id, class: 'control-label col-sm-2' %>
+            <div class="col-sm-9">
+              <%= f.collection_radio_buttons :priority_id, Priority.all, :id, :name_priority %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :date_closed, class: 'control-label col-sm-2' %>
+            <div class="col-sm-9">
+              <%= f.text_field :date_closed, { 'data-provide' => 'datepicker', :id => 'datepicker-closing', class: 'form-control' } %>
+            </div>
+          </div>
+          <%= f.hidden_field :user_id, :value => session[:user_id] %>
+        </fieldset>
+        <fieldset>
+          <legend>Questions</legend>
+        </fieldset>
+        <%= f.submit 'Confirm' %>
+    <% end %>
+<% end %>
+<%= render template: 'layouts/application' %>

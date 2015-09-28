@@ -68,4 +68,8 @@ $ ->
   $('#form-questions').submit ->
     return validate_question()
 
+  $('#datepicker-closing').datepicker({
+    format: 'dd/mm/yyyy'
+  })
+
   return

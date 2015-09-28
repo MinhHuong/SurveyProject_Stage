@@ -47,7 +47,8 @@ class UsersController < ApplicationController
   end
 
   def check_password
-    @user = User.find(params[:id])
+    _id = session[:user_id].to_i
+    @user = User.find(_id)
     old_pwd = params[:oldPwd]
     if @user.authenticate(old_pwd)
       result = true
@@ -58,16 +59,19 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    _id = session[:user_id].to_i
+    @user = User.find(_id)
   end
 
   def edit
-    @user = User.find(params[:id])
+    _id = session[:user_id].to_i
+    @user = User.find(_id)
   end
 
   # Update User's profile (including changing password and uploading pictures)
   def update
-    @user = User.find(params[:id])
+    _id = session[:user_id].to_i
+    @user = User.find(_id)
     client = Client.find(@user.clients_id)
 
     if @user != nil and client != nil
@@ -79,7 +83,7 @@ class UsersController < ApplicationController
 
       # !!! If using RENDER instead of REDIRECT, there will be problem
       # (request not finishing...I dunno, but use this and problems solved)
-      redirect_to '/users/profile/' << params[:id]
+      redirect_to '/profile'
     else
       render 'edit'
     end

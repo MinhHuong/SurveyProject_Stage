@@ -9,10 +9,10 @@ Rails.application.routes.draw do
   post '/login' => 'sessions#create'
   delete '/logout' => 'sessions#destroy', as: :logout
 
-  get '/users/profile/:id' => 'users#show', as: :user_profile
-  post '/users/profile/checkpwd/:id' => 'users#check_password'
-  get '/users/profile/:id/edit' => 'users#edit', as: :edit_profile
-  patch '/users/profile/:id' => 'users#update', as: :update_profile
+  get '/profile' => 'users#show', as: :user_profile
+  post '/profile/checkpwd' => 'users#check_password'
+  get '/profile/edit' => 'users#edit', as: :edit_profile
+  patch '/profile' => 'users#update', as: :update_profile
 
   resources :clients, :users
 
@@ -20,9 +20,6 @@ Rails.application.routes.draw do
   namespace :employee do
     ## profile
     get '/home' => 'employees#index', as: :index
-    #get '/profile/:id' => 'employees#show', as: :profile
-    #get 'profile/:id/edit' => 'employees#edit', as: :edit_profile
-    #patch '/profile/:id' => 'employees#update', as: :update_profile
 
     ## surveys
     get '/surveys' => 'surveys#index', as: :surveys_all
@@ -40,6 +37,8 @@ Rails.application.routes.draw do
     ## surveys
     get '/surveys' => 'surveys#index', as: :surveys_all
     get '/surveys/filter' => 'surveys#filter', as: :surveys_filtered
+    get '/surveys/new' => 'surveys#new', as: :new_survey
+    post '/surveys' => 'surveys#create', as: :create_survey
     get '/surveys/:id' => 'surveys#show', as: :show_survey
     post '/surveys/:id/submit' => 'surveys#submit_survey', as: :submit_survey
   end

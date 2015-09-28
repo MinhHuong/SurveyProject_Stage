@@ -48,7 +48,7 @@
               <div class="form-group">
                 <%= f.label('Permission', class: 'control-label col-sm-2') %>
                 <div class="col-sm-5">
-                  <%= text_field_tag 'permission', 'Leader', class: 'form-control', disabled: true %>
+                  <%= text_field_tag 'permission', @user.permission.capitalize, class: 'form-control', disabled: true %>
                 </div>
               </div>
               <div class="form-group">

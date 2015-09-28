@@ -10,6 +10,7 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *= require jquery-ui/dialog
+ *= require bootstrap-datepicker
  *= require_tree .
  *= require_self
  */
@@ -72,8 +73,12 @@ footer {
   color: #ffffff;
 }
 
-.navbar-inverse, .navbar-header, .dropdown-menu {
+#main-navbar.navbar-inverse {
   background-color: #000000;
+
+  .dropdown-menu {
+    background-color: #000000;
+  }
 }
 
 .dropdown-menu > li > a > i {

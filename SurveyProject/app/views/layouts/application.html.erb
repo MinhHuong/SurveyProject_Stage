@@ -10,7 +10,7 @@
 
 <body>
 <div id='wrapper' class="container">
-  <nav class="navbar navbar-inverse">
+  <nav class="navbar navbar-inverse" id="main-navbar">
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="#" id="navbrand-lbn"></a>
@@ -21,12 +21,12 @@
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                   Hello, <%= session[:name_user] %>
-                  <%= image_tag(@user_picture, :alt => 'User thumbnail', :id => 'thumbnails-user') %>
+                  <%= image_tag(session[:link_picture], :alt => 'User thumbnail', :id => 'thumbnails-user') %>
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <%= link_to user_profile_path(@user_id) do %>
+                    <%= link_to :user_profile do %>
                         <i class="fa fa-user"></i> My profile
                     <% end %>
                   <li>

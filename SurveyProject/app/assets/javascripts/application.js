@@ -15,6 +15,7 @@
 //= require jquery_ujs
 //= require jquery-ui/dialog
 //= require bootstrap
+//= require bootstrap-datepicker
 //= require react
 //= require react_ujs
 //= require components

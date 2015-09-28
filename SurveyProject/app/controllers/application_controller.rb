@@ -6,9 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :set_user_id
   def set_user_id
     unless current_user.nil?
-      @user_picture = (current_user.link_picture != nil ? current_user.link_picture : 'default_user.jpg')
+      session[:link_picture]= (current_user.link_picture != nil ? current_user.link_picture : 'default_user.jpg')
     end
-    @user_id = session[:user_id] ? session[:user_id] : 0
   end
 
   helper_method :current_user

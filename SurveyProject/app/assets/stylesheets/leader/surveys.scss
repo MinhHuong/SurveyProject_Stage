@@ -1,3 +1,26 @@
 // Place all the styles related to the leader/surveys controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#new_survey {
+  fieldset {
+    background-color: #e7e7e7;
+    padding: 30px;
+    border: 1px solid #1C1C1C;
+    margin-bottom: 36px;
+
+    input[type=radio] {
+      margin-right: 6px;
+    }
+
+    input[type=radio] + label {
+      margin-right: 24px;
+    }
+
+    legend {
+      display: inline;
+      width: auto;
+      margin-bottom: 0;
+    }
+  }
+}
