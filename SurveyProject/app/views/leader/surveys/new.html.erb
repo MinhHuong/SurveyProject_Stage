@@ -5,8 +5,9 @@
 <% content_for :content do %>
     <h2>New survey</h2>
     <%= form_for(@survey, method: :post, :url => '/leader/surveys', html: { class: 'form-horizontal', role: 'form', multipart: true}) do |f| %>
+        <!-- Group of General informations -->
         <fieldset>
-          <legend>General informations</legend>
+          <legend>General information</legend>
           <div class="form-group">
             <%= f.label :name_survey, class: 'control-label col-sm-2' %>
             <div class="col-sm-9">
@@ -33,8 +34,15 @@
           </div>
           <%= f.hidden_field :user_id, :value => session[:user_id] %>
         </fieldset>
+        <!-- Group of Questions -->
         <fieldset>
           <legend>Questions</legend>
+          <div class="form-group">
+            <%= label_tag 'type_question', 'Type of Question: ', class: 'control-label col-sm-2' %>
+            <div class="col-sm-3">
+              <%= select_tag 'type_question', options_from_collection_for_select(TypeQuestion.all, 'id', 'name_type_question'), { class: 'form-control' } %>
+            </div>
+          </div>
         </fieldset>
         <%= f.submit 'Confirm' %>
     <% end %>

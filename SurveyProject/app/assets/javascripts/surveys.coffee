@@ -72,4 +72,18 @@ $ ->
     format: 'dd/mm/yyyy'
   })
 
+  content_popover = null;
+
+  $('#type_question').find('option').each (index, value) ->
+    console.log($(this))
+    $(this)
+    .attr({
+        'data-toggle': 'tooltip'
+      })
+    .tooltip({
+      title: 'qgggqwg',
+      html: true,
+      placement: 'right'
+    })
+
   return
