@@ -46,5 +46,27 @@
         </fieldset>
         <%= f.submit 'Confirm' %>
     <% end %>
+    <div id="modal-question" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3></h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="question-content-mc">Question</label>
+              <textarea type="text" id="question-content" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Choices</label>
+              <div id="choices-zone">
+              </div>
+              <button id="add-choice" class="btn btn-default">Add choice</button>
+            </div>
+          </div>
+          <div class="modal-footer">Oki it's just footer</div>
+        </div>
+      </div>
+    </div>
 <% end %>
 <%= render template: 'layouts/application' %>
