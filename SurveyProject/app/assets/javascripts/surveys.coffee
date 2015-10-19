@@ -8,6 +8,7 @@
 current_page = 1
 total_page = 0
 num_choice = 1
+num_question = 1
 arr_questions = []
 arr_choices = []
 
@@ -56,17 +57,18 @@ renumber = (arr_choices) ->
   else
     num_choice--
     $('.choice-form').each (index, value) ->
-      $(value).find('.number-choices').text(index+1)
-      $(value).find('.content-choices').attr('id', 'content-' + (index+1))
+      numero = index + 1
+      $(value).find('.number-choices').text(numero)
+      $(value).find('.content-choices').attr('id', 'content-' + (numero))
       $(value).find('.edit-choices')
-              .attr('id', 'edit-' + (index+1))
+              .attr('id', 'edit-' + (numero))
               .off('click')
-              .click -> edit_choice(index+1)
+              .click -> edit_choice(numero)
       $(value).find('.remove-choices')
-              .attr('id', 'remove-' + (index+1))
+              .attr('id', 'remove-' + (numero))
               .off('click')
-              .click -> remove_choice(index+1)
-      $(this).attr('id', 'choice-' + (index+1))
+              .click -> remove_choice(numero)
+      $(this).attr('id', 'choice-' + (numero))
 
 display_modal_question = (index) ->
   switch(index)
@@ -84,48 +86,103 @@ display_modal_question = (index) ->
 # true: adding
 # false: editing
 add_choice = (type, numero_choice = num_choice) ->
-  id_choice = 'input-choice-' + numero_choice
+  # Icon: confirm choice
   icon_ok = $('<button>')
-  .addClass('btn btn-default glyphicon glyphicon-ok')
-  .css({ 'color': 'green', 'margin-left': '20px' })
-  .attr('id', 'ok-' + numero_choice)
-  .click ->
-    confirm_choice(numero_choice)
-  label_choice = $('<label></label>').addClass('choice-label col-sm-1').text(numero_choice)
-  input_choice = $('<input/>').attr({ 'type': 'text', 'name': id_choice, 'id'  : id_choice, 'size': 40})
+   .addClass('btn btn-default glyphicon glyphicon-ok')
+   .css({ 'color': 'green', 'margin-left': '10px' })
+   .attr('id', 'ok-' + numero_choice)
+   .click ->
+     confirm_choice(numero_choice)
+  
+  # Icon: cancel choice
+  icon_cancel = $('<button>')
+   .addClass('btn btn-default glyphicon glyphicon-remove')
+   .css({ 'color': 'orange', 'margin-left': '10px' })
+   .attr('id', 'cancel-' + numero_choice)
+   .click ->
+     cancel_choice(numero_choice)
+  
+  # Label (numero of choice)
+  label_choice = $('<label>').addClass('choice-label col-sm-1').text(numero_choice)
+  
+  # Input: type content of choice
+  input_choice = $('<input/>')
+   .attr({ 'type': 'text', 'name': 'input-choice-' + numero_choice, 'id': 'input-choice-' + numero_choice })
+   .addClass('form-control col-sm-2')
+  # <div class='form-group'><input..></div> --> apply better CSS on input's width
+  div_input = $('<div>').addClass('col-sm-8').append(input_choice)
+  
+  # All div: label, input, icon OK, icon CANCEL
+  div_input_choice = $('<div><')
+   .append(label_choice, div_input, icon_ok, icon_cancel)
+   .attr('id', 'div-input-choice-' + numero_choice)
+   .addClass('form-group')
+  
+  # Editing
   if(!type)
     $(input_choice).val($('#content-' + numero_choice).text())
-    $('#choice-' + numero_choice).after($(label_choice), $(input_choice), $(icon_ok)).remove()
+    $('#choice-' + numero_choice).after(div_input_choice).remove()
+  # Adding
   else
-    $('#choices-zone').append(label_choice, input_choice, icon_ok)
-    num_choice++;
+    $('#choices-zone').append(div_input_choice)
+    $(input_choice).focus()
+  
+  # Hide button "Add choice"
   $('#add-choice').css('display', 'none')
 
+# Cancelling a new choice
+cancel_choice = (numero_choice) ->
+  $('#div-input-choice-' + numero_choice).remove()
+  $('#add-choice').css('display', 'block')
+
+# Confirming a choice
 confirm_choice = (numero_choice) ->
   # arr_choices.push($("#input-choice-" + num_choice).val())
+
+  # Validate if choice is not empty
   if $("#input-choice-" + numero_choice).val().length == 0
     $("#input-choice-" + numero_choice).attr('placeholder', 'Choice must not be empty !')
   else
-    icon_edit = "<button id='edit-" + numero_choice + "' class='edit-choices btn btn-default glyphicon glyphicon-pencil'></button>"
-    icon_delete = "<button id='remove-" + numero_choice + "'class='remove-choices btn btn-default glyphicon glyphicon-remove'></button>"
+    # fix here !!! Editing an existing choice will lead to serious error
+    new_choice = { no_question: num_question, no_choice: num_choice, content: $("#input-choice-" + numero_choice).val() }
+    arr_choices.push(new_choice)
+    console.log(arr_choices)
+    num_choice++
+
+    # Icon: editing a choice
+    icon_edit = "<button id='edit-" + numero_choice + "' class='edit-choices btn btn-default glyphicon glyphicon-pencil' style='color: #0080FF'></button>"
+
+    # Icon: removing a choice
+    icon_delete = "<button id='remove-" + numero_choice + "'class='remove-choices btn btn-default glyphicon glyphicon-fire' style='color: red'></button>"
+
+    # Complete content of a choice, eg: 1. Green
+    # <p>
+    #   <span class='number-choices'> 1 </span>
+    #   <span class='content-choices' style='..' id='content-1'> Green </span>
+    #   <span class='btn-group'> icon edit $ delete </span>
+    # </p>
     content_choice = "<p class='choice-form' id='choice-" + numero_choice + "'><span class='number-choices'>" + numero_choice + "</span>.  <span class='content-choices' style='margin-right:12px' id='content-" + numero_choice + "'> " + $("#input-choice-" + numero_choice).val() + "</span> <span class='btn-group'>" + icon_edit + icon_delete + "</span></p>"
-    $('#ok-' + numero_choice).after(content_choice)
-    $('.choice-label, #input-choice-' + numero_choice + ', #ok-' + numero_choice).remove()
-    $('#confirm-choice').css('display', 'none')
+    $('#div-input-choice-' + numero_choice).after(content_choice).remove()
     $('#add-choice').css('display', 'block')
     $('#edit-' + numero_choice).click -> 
       edit_choice(numero_choice)
     $('#remove-' + numero_choice).click ->
       remove_choice(numero_choice)
 
+# Editing a choice (reuse add_choice, take type (true/false) as discriminator)
 edit_choice = (numero_choice) ->
-  console.log(numero_choice)
   add_choice(false, numero_choice)
 
+# Remove a choice & Renumber choices
 remove_choice = (numero_choice) ->
   arr_choices.splice(numero_choice-1, 1)
   $('#choice-' + numero_choice).remove()
   renumber($('.number-choices'))
+  
+  # renumber arr_choices
+  $(arr_choices).each (index, value) ->
+    value['no_choice'] = index+1
+  console.log(arr_choices) 
 
 $ ->
   check_filter_criteria()
