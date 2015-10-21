@@ -92,7 +92,7 @@ add_choice = (type, numero_choice = num_choice) ->
    .css({ 'color': 'green', 'margin-left': '10px' })
    .attr('id', 'ok-' + numero_choice)
    .click ->
-     confirm_choice(numero_choice)
+     confirm_choice(numero_choice, type)
   
   # Icon: cancel choice
   icon_cancel = $('<button>')
@@ -136,18 +136,23 @@ cancel_choice = (numero_choice) ->
   $('#add-choice').css('display', 'block')
 
 # Confirming a choice
-confirm_choice = (numero_choice) ->
+# type: discrimator to recognize this action is for adding / editing
+confirm_choice = (numero_choice, type) ->
   # arr_choices.push($("#input-choice-" + num_choice).val())
 
   # Validate if choice is not empty
   if $("#input-choice-" + numero_choice).val().length == 0
     $("#input-choice-" + numero_choice).attr('placeholder', 'Choice must not be empty !')
   else
-    # fix here !!! Editing an existing choice will lead to serious error
-    new_choice = { no_question: num_question, no_choice: num_choice, content: $("#input-choice-" + numero_choice).val() }
-    arr_choices.push(new_choice)
-    console.log(arr_choices)
-    num_choice++
+    # 
+    if type
+      new_choice = { no_question: num_question, no_choice: numero_choice, content: $("#input-choice-" + numero_choice).val() }
+      arr_choices.push(new_choice)
+      console.log(arr_choices)
+      num_choice++
+    else
+      arr_choices[numero_choice-1]['content'] = $("#input-choice-" + numero_choice).val()
+      console.log(arr_choices)
 
     # Icon: editing a choice
     icon_edit = "<button id='edit-" + numero_choice + "' class='edit-choices btn btn-default glyphicon glyphicon-pencil' style='color: #0080FF'></button>"
@@ -184,6 +189,14 @@ remove_choice = (numero_choice) ->
     value['no_choice'] = index+1
   console.log(arr_choices) 
 
+confirm_question = (numero_question, type) ->
+  if type
+    num_question++
+  new_question = { no_question: numero_question, content: $('#question-content').val() }
+  arr_questions.push(new_question)
+  console.log(arr_questions)
+  $('#modal-question').modal('hide')
+
 $ ->
   check_filter_criteria()
 
@@ -209,11 +222,19 @@ $ ->
     format: 'dd/mm/yyyy'
   })
 
-  $('#modal-question').on 'shown.bs.modal', ->
+  $('#modal-question').on 'show.bs.modal', ->
     num_choice = 1
+    $('#question-content').val('')
+    $('#choices-zone').empty()
 
   $('#add-choice').click ->
     add_choice(true)
+
+  # Type: discriminator to recognize adding / editing
+  # true: adding
+  # false: editing
+  $('#confirm-question').click (type) ->
+    confirm_question(num_question, true)
 
   $('#type_question').find('option').each (index, value) ->
     $(value).click ->
