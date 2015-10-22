@@ -5,12 +5,35 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+# current page (doing a survey)
 current_page = 1
+
+# total page (sum of all questions of a survey)
 total_page = 0
+
+# numero of current choice (on a modal)
 num_choice = 1
+
+# numero of total question
 num_question = 1
+
+# numero of current questions
+current_question = 1
+
+# array of questions: { no_question: ..., content: ... }
+# content: content of question
 arr_questions = []
+
+# array of choices: { no_question: ..., no_choice: ..., content: ... }
+# content: content of choices
 arr_choices = []
+
+# Distinguish the 3 types of question
+# 0 : Multiple choices
+# 1 : Drop down list
+# 2 : One choice only
+# 3 : Scale
+type_question = 0
 
 check_filter_criteria = ->
   filter_code = $('#filter-code').text()
@@ -51,7 +74,7 @@ validate_question = ->
       valid = false
   return valid
 
-renumber = (arr_choices) ->
+renumber = (numero_question) ->
   if $('.choice-form').length == 0
     num_choice = 1
   else
@@ -67,10 +90,31 @@ renumber = (arr_choices) ->
       $(value).find('.remove-choices')
               .attr('id', 'remove-' + (numero))
               .off('click')
-              .click -> remove_choice(numero)
+              .click -> remove_choice(numero, numero_question)
       $(this).attr('id', 'choice-' + (numero))
 
+show_question_on_page = (content_question, type_question, content_choices) ->
+  div_question = $('<div>').css('margin-bottom', '30px')
+  p_question = $('<p>').text(content_question).css({ 'font-weight': 'bold', 'margin-bottom': '6px' })
+  switch(type_question)
+    when 0
+      $(content_choices).each (index, value) ->
+        div_choice = $('<div>').addClass('checkbox')
+        item_choice = "<label><input type='checkbox'>" + value.content + "</label>"
+        $(div_choice).append(item_choice)
+        $(div_question).append(div_choice)
+      $('#list-questions').append(p_question, div_question)
+    when 1
+      console.log('Drop down list')
+    when 2
+      console.log('One choice only')
+    when 3
+      console.log('On the scale')
+  return
+
 display_modal_question = (index) ->
+  # index = 0, 1, 2, 3...corresponds to type_question (also) = 0, 1, 2, 3
+  type_question = index
   switch(index)
     when 0
       $('#modal-question').modal({ backdrop: 'static' }).find('h3').text('Multiple choices')
@@ -144,12 +188,16 @@ confirm_choice = (numero_choice, type) ->
   if $("#input-choice-" + numero_choice).val().length == 0
     $("#input-choice-" + numero_choice).attr('placeholder', 'Choice must not be empty !')
   else
-    # 
+    # remove the alert (if existing) in the modal's footer
+    $('#alert-question').text('')
+
+    # adding choice
     if type
       new_choice = { no_question: num_question, no_choice: numero_choice, content: $("#input-choice-" + numero_choice).val() }
       arr_choices.push(new_choice)
       console.log(arr_choices)
       num_choice++
+    # editing choice
     else
       arr_choices[numero_choice-1]['content'] = $("#input-choice-" + numero_choice).val()
       console.log(arr_choices)
@@ -180,22 +228,53 @@ edit_choice = (numero_choice) ->
 
 # Remove a choice & Renumber choices
 remove_choice = (numero_choice) ->
-  arr_choices.splice(numero_choice-1, 1)
+  index_remove = 0
+  console.log(current_question + ' ' + numero_choice)
+  for value in arr_choices
+    if value.no_question == current_question and value.no_choice == numero_choice
+      break
+    index_remove++
+
+  arr_choices.splice(index_remove, 1)
   $('#choice-' + numero_choice).remove()
   renumber($('.number-choices'))
   
-  # renumber arr_choices
+  # renumber arr_choices (for involved question)
+  console.log(current_question)
+  renumbered_index = 0
   $(arr_choices).each (index, value) ->
-    value['no_choice'] = index+1
-  console.log(arr_choices) 
+    console.log(value)
+    if value.no_question == current_question
+      value['no_choice'] = ++renumbered_index
+  console.log(arr_choices)
 
+# Confirming a question
 confirm_question = (numero_question, type) ->
-  if type
-    num_question++
-  new_question = { no_question: numero_question, content: $('#question-content').val() }
-  arr_questions.push(new_question)
-  console.log(arr_questions)
-  $('#modal-question').modal('hide')
+  if num_choice != 1
+    if $('#question-content').val() != ''
+      # adding a question
+      if type
+        num_question++
+        current_question++
+      # add new question to array
+      new_question = { no_question: numero_question, content: $('#question-content').val() }
+      arr_questions.push(new_question)
+      # console.log(arr_questions)
+      $('#modal-question').modal('hide')
+      
+      # creating a question (display on page)
+      choices_of_question = []
+      $(arr_choices).each (index, value) ->
+        if value['no_question'] == numero_question
+          choices_of_question.push(value)
+      console.log(choices_of_question)
+      show_question_on_page(
+        numero_question + '. ' + $('#question-content').val(), type_question, choices_of_question
+      )
+    else
+      $('#question-content').attr('placeholder', 'Question cannot have empty content !')
+  else
+    $('#alert-question').html('<i class="fa fa-exclamation-triangle"></i> A question must have AT LEAST one choice').css('color', 'red')
 
 $ ->
   check_filter_criteria()
@@ -228,6 +307,7 @@ $ ->
     $('#choices-zone').empty()
 
   $('#add-choice').click ->
+    $('#alert-question').text('')
     add_choice(true)
 
   # Type: discriminator to recognize adding / editing

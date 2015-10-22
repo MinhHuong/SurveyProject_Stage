@@ -37,6 +37,7 @@
         <!-- Group of Questions -->
         <fieldset>
           <legend>Questions</legend>
+          <div id="list-questions"></div>
           <div class="form-group">
             <%= label_tag 'type_question', 'Type of Question: ', class: 'control-label col-sm-2' %>
             <div class="col-sm-3">
@@ -46,10 +47,12 @@
         </fieldset>
         <%= f.submit 'Confirm' %>
     <% end %>
+
+    <!-- Modal: adding a question -->
     <div id="modal-question" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="margin-top:10px;margin-bottom:6px;">
             <h3></h3>
           </div>
           <div class="modal-body">
@@ -65,6 +68,7 @@
             </div>
           </div>
           <div class="modal-footer">
+            <span id="alert-question"></span>
             <button id="confirm-question" class="btn btn-success">Confirm</button>
           </div>
         </div>
