@@ -42,35 +42,49 @@ check_filter_criteria = ->
       $(value).prop('checked', true)
 
 show_current_page = ->
-  if current_page == 1
-    $('#btn-submit').css('visibility', 'hidden')
-    $('#btn-prev').css('visibility','hidden')
-  else if current_page == total_page
-    $('#btn-next').css('visibility', 'hidden')
+  # if there's only ONE choice for the survey
+  if total_page == 1
     $('#btn-submit').css('visibility', 'visible')
+    $('#btn-prev').css('visibility', 'hidden')
+    $('#btn-next').css('visibility', 'hidden')
+  # else, more then one choice
   else
-    $('#btn-submit').css('visibility', 'hidden')
-    $('#btn-prev').css('visibility', 'visible')
-    $('#btn-next').css('visibility', 'visible')
+    # first question ?
+    if current_page == 1
+      $('#btn-submit').css('visibility', 'hidden')
+      $('#btn-prev').css('visibility','hidden')
+    # last question ?
+    else if current_page == total_page
+      $('#btn-next').css('visibility', 'hidden')
+      $('#btn-submit').css('visibility', 'visible')
+    # other questions that are not first neither last
+    else
+      $('#btn-submit').css('visibility', 'hidden')
+      $('#btn-prev').css('visibility', 'visible')
+      $('#btn-next').css('visibility', 'visible')
 
+  # compute the % of survey's completing and setup the progress bar
   ratio = Math.floor(current_page/total_page * 100)
   $('#progress-questions')
   .css('width', ratio + '%')
   .attr('aria-valuenow', ratio)
   $('#progress-percent').text(ratio + '% Complete' )
 
+  # hide all questions
   $('.question').hide()
+
+  # show the current question
   $('#question' + current_page).fadeIn()
   return
 
 validate_question = ->
   valid = true
-  current_question = $('#question' + current_page)
-  if $(current_question).find('input').length != 0
-    if $(current_question).find('input').is(':checked')
-      $(current_question).find('.validation-zone').css('visibility', 'hidden')
+  curr_ques = $('#question' + current_page)
+  if $(curr_ques).find('input').length != 0
+    if $(curr_ques).find('input').is(':checked')
+      $(curr_ques).find('.validation-zone').css('visibility', 'hidden')
     else
-      $(current_question).find('.validation-zone').css('visibility', 'visible')
+      $(curr_ques).find('.validation-zone').css('visibility', 'visible')
       valid = false
   return valid
 
@@ -92,6 +106,18 @@ renumber = (numero_question) ->
               .off('click')
               .click -> remove_choice(numero, numero_question)
       $(this).attr('id', 'choice-' + (numero))
+
+type_to_code_question = (type) ->
+  switch type
+    when 0
+      return 'MC'
+    when 1
+      return 'DD'
+    when 2
+      return 'OC'
+    when 3
+      return 'SC'
+  return
 
 show_question_on_page = (content_question, type_question, content_choices) ->
   div_question = $('<div>').css('margin-bottom', '30px')
@@ -249,6 +275,9 @@ remove_choice = (numero_choice) ->
   console.log(arr_choices)
 
 # Confirming a question
+# type: discriminator for adding / editing
+# true: adding
+# false: editing
 confirm_question = (numero_question, type) ->
   if num_choice != 1
     if $('#question-content').val() != ''
@@ -256,10 +285,14 @@ confirm_question = (numero_question, type) ->
       if type
         num_question++
         current_question++
+
       # add new question to array
-      new_question = { no_question: numero_question, content: $('#question-content').val() }
+      new_question = { 
+        no_question: numero_question, 
+        content: $('#question-content').val(), 
+        type_question: type_to_code_question(type_question)
+      }
       arr_questions.push(new_question)
-      # console.log(arr_questions)
       $('#modal-question').modal('hide')
       
       # creating a question (display on page)
@@ -267,7 +300,6 @@ confirm_question = (numero_question, type) ->
       $(arr_choices).each (index, value) ->
         if value['no_question'] == numero_question
           choices_of_question.push(value)
-      console.log(choices_of_question)
       show_question_on_page(
         numero_question + '. ' + $('#question-content').val(), type_question, choices_of_question
       )
@@ -313,11 +345,15 @@ $ ->
   # Type: discriminator to recognize adding / editing
   # true: adding
   # false: editing
-  $('#confirm-question').click (type) ->
+  $('#confirm-question').click ->
     confirm_question(num_question, true)
 
   $('#type_question').find('option').each (index, value) ->
     $(value).click ->
       display_modal_question(index)
+
+  $('#confirm-survey').click ->
+    $('#hidden_questions').val(JSON.stringify(arr_questions))
+    $('#hidden_choices').val(JSON.stringify(arr_choices))
 
   return

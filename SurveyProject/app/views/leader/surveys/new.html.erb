@@ -45,7 +45,9 @@
             </div>
           </div>
         </fieldset>
-        <%= f.submit 'Confirm' %>
+        <input type="hidden" id="hidden_questions" name="hidden_questions" />
+        <input type="hidden" id="hidden_choices" name="hidden_choices" />
+        <%= f.submit 'Confirm', id: 'confirm-survey' %>
     <% end %>
 
     <!-- Modal: adding a question -->

@@ -61,6 +61,28 @@ class Leader::SurveysController < SurveysController
   def create
     @survey = Survey.new(survey_params)
     if @survey.save
+      # add records to QUESTIONS
+      arr_questions = JSON.parse(params[:hidden_questions])
+      arr_questions.each do |value|
+        Question.create(
+          :content => value['content'],
+          :numero_question => value['no_question'],
+          :type_question_id => TypeQuestion.find_by(:code_type_question => value['type_question']).id,
+          :survey_id => @survey.id)
+      end
+
+      # add records to CHOICES
+      arr_choices = JSON.parse(params[:hidden_choices])
+      arr_choices.each do |value|
+        Choice.create(
+          :content => value['content'],
+          :question_id => Question.find_by(
+            :numero_question => value['no_question'],
+            :survey_id => @survey.id).id
+          )
+      end
+
+      # render another page
       render 'leader/leaders/index'
     else
       redirect_to '/leader/surveys/new'
