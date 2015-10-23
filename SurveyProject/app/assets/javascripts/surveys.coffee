@@ -128,8 +128,10 @@ show_question_on_page = (content_question, type_question, content_choices) ->
         div_choice = $('<div>').addClass('checkbox')
         item_choice = "<label><input type='checkbox'>" + value.content + "</label>"
         $(div_choice).append(item_choice)
-        $(div_question).append(div_choice)
-      $('#list-questions').append(p_question, div_question)
+        $(div_choice).find("input[type='checkbox']").change ->
+          this.checked = false
+        $(div_question).append(p_question, div_choice)
+      $('#list-questions').append(div_question)
     when 1
       console.log('Drop down list')
     when 2
@@ -199,11 +201,13 @@ add_choice = (type, numero_choice = num_choice) ->
   
   # Hide button "Add choice"
   $('#add-choice').css('display', 'none')
+  $('#confirm-question, #cancel-question').addClass('disabled').prop('disabled', true)
 
 # Cancelling a new choice
 cancel_choice = (numero_choice) ->
   $('#div-input-choice-' + numero_choice).remove()
   $('#add-choice').css('display', 'block')
+  $('#confirm-question, #cancel-question').removeClass('disabled').prop('disabled', false)
 
 # Confirming a choice
 # type: discrimator to recognize this action is for adding / editing
@@ -243,6 +247,7 @@ confirm_choice = (numero_choice, type) ->
     content_choice = "<p class='choice-form' id='choice-" + numero_choice + "'><span class='number-choices'>" + numero_choice + "</span>.  <span class='content-choices' style='margin-right:12px' id='content-" + numero_choice + "'> " + $("#input-choice-" + numero_choice).val() + "</span> <span class='btn-group'>" + icon_edit + icon_delete + "</span></p>"
     $('#div-input-choice-' + numero_choice).after(content_choice).remove()
     $('#add-choice').css('display', 'block')
+    $('#confirm-question, #cancel-question').removeClass('disabled').prop('disabled', false)
     $('#edit-' + numero_choice).click -> 
       edit_choice(numero_choice)
     $('#remove-' + numero_choice).click ->
@@ -266,13 +271,11 @@ remove_choice = (numero_choice) ->
   renumber($('.number-choices'))
   
   # renumber arr_choices (for involved question)
-  console.log(current_question)
   renumbered_index = 0
   $(arr_choices).each (index, value) ->
     console.log(value)
     if value.no_question == current_question
       value['no_choice'] = ++renumbered_index
-  console.log(arr_choices)
 
 # Confirming a question
 # type: discriminator for adding / editing
@@ -308,6 +311,13 @@ confirm_question = (numero_question, type) ->
   else
     $('#alert-question').html('<i class="fa fa-exclamation-triangle"></i> A question must have AT LEAST one choice').css('color', 'red')
 
+# Cancelling a question
+cancel_question = (numero_question) ->
+  $('#modal-question').modal('hide')
+  $(arr_choices).each (index, value) ->
+    if value['no_question'] = numero_question
+      arr_choices.splice(index, 1)
+
 $ ->
   check_filter_criteria()
 
@@ -335,7 +345,7 @@ $ ->
 
   $('#modal-question').on 'show.bs.modal', ->
     num_choice = 1
-    $('#question-content').val('')
+    $('#question-content').val('').attr('placeholder', '')
     $('#choices-zone').empty()
 
   $('#add-choice').click ->
@@ -347,6 +357,9 @@ $ ->
   # false: editing
   $('#confirm-question').click ->
     confirm_question(num_question, true)
+
+  $('#cancel-question').click ->
+    cancel_question(num_question)
 
   $('#type_question').find('option').each (index, value) ->
     $(value).click ->

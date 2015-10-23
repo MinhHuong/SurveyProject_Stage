@@ -1,13 +1,8 @@
 class SurveysController < ApplicationController
   # Show survey and all the questions contained within
   def show(confirm_fail_page)
-    if survey_is_not_finished(params[:id], session[:user_id])
+    if survey_is_not_finished(params[:id], session[:user_id]) and survey_is_not_closed(params[:id])
       @survey = Survey.includes(:user, :priority, :type_survey, :questions).find(params[:id])
-      if current_user.permission == 'employee'
-        @menubar = 'employee/employees/menubar'
-      elsif current_user.permission == 'leader'
-        @menubar = 'leader/leaders/menubar'
-      end
       render 'surveys/show'
     else
       render confirm_fail_page
@@ -30,6 +25,11 @@ class SurveysController < ApplicationController
   def survey_is_not_finished(survey_id, user_id)
     done_survey = FinishSurvey.where(:survey_id => survey_id).where(:user_id => user_id)
     done_survey.length == 0
+  end
+
+  # returns TRUE if survey is not closed, FALSE otherwise
+  def survey_is_not_closed(survey_id)
+    Survey.find(survey_id).status
   end
 
   def get_choices(choices_array)

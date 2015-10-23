@@ -42,12 +42,17 @@
             <%= label_tag 'type_question', 'Type of Question: ', class: 'control-label col-sm-2' %>
             <div class="col-sm-3">
               <%= select_tag 'type_question', options_from_collection_for_select(TypeQuestion.all, 'id', 'name_type_question'), { class: 'form-control' } %>
+              <p class="text-muted"><br/>
+                Click on one of the question type listed as above to start creating a new question
+              </p>
             </div>
           </div>
         </fieldset>
         <input type="hidden" id="hidden_questions" name="hidden_questions" />
         <input type="hidden" id="hidden_choices" name="hidden_choices" />
-        <%= f.submit 'Confirm', id: 'confirm-survey' %>
+        <div style="text-align:center;">
+          <%= f.submit 'Confirm', id: 'confirm-survey', class: 'btn btn-primary' %>
+        </div>
     <% end %>
 
     <!-- Modal: adding a question -->
@@ -72,6 +77,7 @@
           <div class="modal-footer">
             <span id="alert-question"></span>
             <button id="confirm-question" class="btn btn-success">Confirm</button>
+            <button id="cancel-question" class="btn btn-default">Cancel</button>
           </div>
         </div>
       </div>
