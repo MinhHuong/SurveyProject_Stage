@@ -26,9 +26,23 @@
       padding-right: 10px;
       border: none;
     }
+
+    #list-questions > div > div > a {
+      cursor: pointer;
+    }
   }
 
-  #confirm-survey {
-    width: 100px;
+  .div-button-footer {
+    #confirm-survey, #btn-reset-survey {
+      width: 100px;
+      margin-right: 15px;
+      margin-left: 15px;
+    } 
+  }
+}
+
+#modal-question {
+  #question_img {
+    display: none;
   }
 }

@@ -36,6 +36,7 @@ gem 'sprockets', '2.12.3'
 gem 'react-rails', '~> 1.0'
 gem 'jquery-steps-rails'
 gem 'bootstrap-datepicker-rails'
+gem "jquery-fileupload-rails"
 
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'

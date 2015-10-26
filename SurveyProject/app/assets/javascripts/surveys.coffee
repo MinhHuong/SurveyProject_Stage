@@ -120,8 +120,8 @@ type_to_code_question = (type) ->
   return
 
 show_question_on_page = (content_question, type_question, content_choices) ->
-  div_question = $('<div>').css('margin-bottom', '30px')
   p_question = $('<p>').text(content_question).css({ 'font-weight': 'bold', 'margin-bottom': '6px' })
+  div_question = $('<div>').css('margin-bottom', '30px').append(p_question)
   switch(type_question)
     when 0
       $(content_choices).each (index, value) ->
@@ -130,7 +130,14 @@ show_question_on_page = (content_question, type_question, content_choices) ->
         $(div_choice).append(item_choice)
         $(div_choice).find("input[type='checkbox']").change ->
           this.checked = false
-        $(div_question).append(p_question, div_choice)
+        $(div_question).append(div_choice)
+
+      # <div> contains 2 <a>: link to EDIT and link to DELETE
+      edit_link = $('<a>').text('Edit').css('margin-right', '5px')
+      delete_link = $('<a>').text('Delete').css('margin-left', '5px')
+      $(div_question).append( $('<div>').append(edit_link, delete_link).css('margin-top', '10px') )
+
+      # appends everything on <div></div> for the whole question
       $('#list-questions').append(div_question)
     when 1
       console.log('Drop down list')
@@ -284,16 +291,13 @@ remove_choice = (numero_choice) ->
 confirm_question = (numero_question, type) ->
   if num_choice != 1
     if $('#question-content').val() != ''
-      # adding a question
-      if type
-        num_question++
-        current_question++
-
       # add new question to array
       new_question = { 
         no_question: numero_question, 
         content: $('#question-content').val(), 
-        type_question: type_to_code_question(type_question)
+        type_question: type_to_code_question(type_question),
+        image_question: $('#question_img')[0].files[0]
+        # somehow the image file is empty ?
       }
       arr_questions.push(new_question)
       $('#modal-question').modal('hide')
@@ -306,6 +310,11 @@ confirm_question = (numero_question, type) ->
       show_question_on_page(
         numero_question + '. ' + $('#question-content').val(), type_question, choices_of_question
       )
+
+      # adding a question
+      if type
+        num_question++
+        current_question++
     else
       $('#question-content').attr('placeholder', 'Question cannot have empty content !')
   else
@@ -347,6 +356,8 @@ $ ->
     num_choice = 1
     $('#question-content').val('').attr('placeholder', '')
     $('#choices-zone').empty()
+    $('#question-img-zone').attr('src', '').css('display', 'none')
+    $('#question_img')[0].files = []
 
   $('#add-choice').click ->
     $('#alert-question').text('')
@@ -357,6 +368,7 @@ $ ->
   # false: editing
   $('#confirm-question').click ->
     confirm_question(num_question, true)
+    return false
 
   $('#cancel-question').click ->
     cancel_question(num_question)
@@ -368,5 +380,39 @@ $ ->
   $('#confirm-survey').click ->
     $('#hidden_questions').val(JSON.stringify(arr_questions))
     $('#hidden_choices').val(JSON.stringify(arr_choices))
+
+  $('#btn-reset-survey').click ->
+    #$('#list-questions').empty()
+    $('#modal-reset').modal()
+    return false
+
+  $('#btn-question-img').click ->
+    $('#question_img').click()
+
+  $('#question_img').on('change', ->
+    filesSelected = $(this)[0].files
+    if filesSelected.length > 0
+      fileToLoad = filesSelected[0]
+      if fileToLoad.type.match('image.*')
+        fileReader = new FileReader()
+        fileReader.onload = (fileLoadedEvent) ->
+          $('#question-img-zone')
+          .attr({
+            'src': fileLoadedEvent.target.result,
+            'alt': 'image for question',
+            'width': '300px',
+            'height': '180px'
+          })
+          .css({
+            'margin-top': '15px',
+            'display': 'block'
+          })
+          return
+        fileReader.readAsDataURL(fileToLoad)
+   )
+
+  $('#btn-remove-img').click ->
+    $('#question-img-zone').attr('src', '').css('display', 'none')
+    $('#question_img')[0].files = null
 
   return

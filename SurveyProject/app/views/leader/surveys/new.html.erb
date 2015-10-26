@@ -50,8 +50,9 @@
         </fieldset>
         <input type="hidden" id="hidden_questions" name="hidden_questions" />
         <input type="hidden" id="hidden_choices" name="hidden_choices" />
-        <div style="text-align:center;">
+        <div class="div-button-footer" style="text-align:center;">
           <%= f.submit 'Confirm', id: 'confirm-survey', class: 'btn btn-primary' %>
+          <button id="btn-reset-survey" class="btn btn-danger">Reset all</button>
         </div>
     <% end %>
 
@@ -64,8 +65,19 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
-              <label for="question-content-mc">Question</label>
+              <label for="question-content">Question</label>
               <textarea type="text" id="question-content" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+              <div>
+                <label for="question-image">Image (optional)</label>
+              </div>
+              <input id="question_img" type="file" name="question[img]" />
+              <button id="btn-question-img" class="btn btn-default">Upload image</button>
+              <button id="btn-remove-img" class="btn btn-default">Remove image</button>
+              <div>
+                <img id="question-img-zone" src=''>
+              </div>
             </div>
             <div class="form-group">
               <label>Choices</label>
@@ -78,6 +90,22 @@
             <span id="alert-question"></span>
             <button id="confirm-question" class="btn btn-success">Confirm</button>
             <button id="cancel-question" class="btn btn-default">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: confirmation for resetting all survey -->
+    <div id="modal-reset" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="margin-top:0px;margin-bottom:0px; padding:5px 15px 15px 20px;">
+            <h3>Reset survey</h3>
+          </div>
+          <div class="modal-body">
+            <p class="text-danger" style="text-align:center;">Are you sure to reset this survey ? All questions will be erased.</p>
+          </div>
+          <div class="modal-footer">
           </div>
         </div>
       </div>

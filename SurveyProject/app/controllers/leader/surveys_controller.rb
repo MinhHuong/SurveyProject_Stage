@@ -62,6 +62,8 @@ class Leader::SurveysController < SurveysController
     @survey = Survey.new(survey_params)
     if @survey.save
       # add records to QUESTIONS
+      user = User.find(session[:user_id].to_i)
+      client = Client.find(user.clients_id)
       arr_questions = JSON.parse(params[:hidden_questions])
       arr_questions.each do |value|
         Question.create(
@@ -69,6 +71,9 @@ class Leader::SurveysController < SurveysController
           :numero_question => value['no_question'],
           :type_question_id => TypeQuestion.find_by(:code_type_question => value['type_question']).id,
           :survey_id => @survey.id)
+        # upload_file(value['image_question'], value, client)
+        # array of files is empty ?
+        # TODO: upload image
       end
 
       # add records to CHOICES
@@ -109,5 +114,23 @@ class Leader::SurveysController < SurveysController
         :user_id,
         :status => true
     )
+  end
+
+  # Function that manages the picture uploading
+  # Keep original name of the pictures
+  # Save it into the right directory, following this rule:
+  # <company_name>/surveys/<picture_original_name>
+  def upload_file(image, question, client_name)
+    if image != nil
+      # if question.link_picture != nil
+      #  File.delete('public/images/' << question.link_picture)
+      # end
+      name = image.original_filename
+      directory = 'public/images/' + client_name + '/surveys'
+      path = File.join(directory, name)
+      File.open(path, 'wb') { |f| f.write(image.read) }
+      path_img = client_name + '/surveys/' + name
+      Question.where(:survey_id => question.survey_id).update_all(link_picture: path_img)
+    end
   end
 end
