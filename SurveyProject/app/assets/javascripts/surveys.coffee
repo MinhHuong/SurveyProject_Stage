@@ -35,12 +35,21 @@ arr_choices = []
 # 3 : Scale
 type_question = 0
 
+# what am I doing here
+# I'm developing a Rails application, 'm supposed to code a lot in Ruby
+# and now JavaScript buggers me in the buggering hell
+# file_img : contains the file chosen as image for question
+file_img = null
+
+# Displaying the filter criteria when user navigates in list of surveys
+# eg: Sorted by: Name / Date created / Date closed
 check_filter_criteria = ->
   filter_code = $('#filter-code').text()
   $('#filter_form').find('input[type=radio]').each (index, value) ->
     if $(value).attr('value') == filter_code
       $(value).prop('checked', true)
 
+# Completing a survey, show one only question on each page
 show_current_page = ->
   # if there's only ONE choice for the survey
   if total_page == 1
@@ -77,6 +86,7 @@ show_current_page = ->
   $('#question' + current_page).fadeIn()
   return
 
+# Validating if the current has been correctly completed
 validate_question = ->
   valid = true
   curr_ques = $('#question' + current_page)
@@ -88,6 +98,10 @@ validate_question = ->
       valid = false
   return valid
 
+# Creating a question: renumber all choices when a choice has been removed
+# Possible optimization: instead of renumbering EVERY choice, determine the ones where this process should begin
+# eg: I have in total 50 choices, I remove the 48th, beginning the renumbering process from the 1st makes no sense
+# should begin at the 48th choice
 renumber = (numero_question) ->
   if $('.choice-form').length == 0
     num_choice = 1
@@ -107,6 +121,7 @@ renumber = (numero_question) ->
               .click -> remove_choice(numero, numero_question)
       $(this).attr('id', 'choice-' + (numero))
 
+# convert the number of type_question to a code (string of 2 characters)
 type_to_code_question = (type) ->
   switch type
     when 0
@@ -119,18 +134,66 @@ type_to_code_question = (type) ->
       return 'SC'
   return
 
+# file_input_tag & image_tag are just string representing a selector jQuery
+load_image_from_file = (file_input_tag, image_tag) ->
+  filesSelected = $(file_input_tag)[0].files
+  if filesSelected.length > 0
+    fileToLoad = filesSelected[0]
+    file_img = fileToLoad
+    if fileToLoad.type.match('image.*')
+      fileReader = new FileReader()
+      fileReader.onload = (fileLoadedEvent) ->
+        $(image_tag)
+        .attr({
+          'src': fileLoadedEvent.target.result,
+          'alt': 'image',
+          'width': '300px',
+          'height': '180px'
+          })
+        .css({
+         'margin-top': '15px',
+         'display': 'block'
+         })
+      fileReader.readAsDataURL(fileToLoad)
+  return
+
+# after confirming a new question, use this method to show it (HTML) on view
 show_question_on_page = (content_question, type_question, content_choices) ->
+  # show Question
   p_question = $('<p>').text(content_question).css({ 'font-weight': 'bold', 'margin-bottom': '6px' })
   div_question = $('<div>').css('margin-bottom', '30px').append(p_question)
+
+  # each type of question corresponds to a different showing method
+  # not really
+  # those types just differ on the type of choices
+  # like <input type="checkbox"> / <input type="radio"> / <select><option>1</option>...</select>
+  # showing the question, adding image and EDIT / DELETE links are the same
   switch(type_question)
     when 0
+      # show Choices
       $(content_choices).each (index, value) ->
         div_choice = $('<div>').addClass('checkbox')
         item_choice = "<label><input type='checkbox'>" + value.content + "</label>"
         $(div_choice).append(item_choice)
+        # disable check on checkbox
         $(div_choice).find("input[type='checkbox']").change ->
           this.checked = false
         $(div_question).append(div_choice)
+
+      # show Image
+      # show a <img> tag
+      img_question = $('<img/>').attr('id', 'img-question-' + current_question)
+      load_image_from_file('#question_img', '#img-question-' + current_question)
+      # create a hidden input file that is used to upload image to server
+      hidden_input_file = $('<input/>')
+        .attr({ 
+          'type': 'file',
+          'name': 'inputfile-' + current_question + '[img]',
+          'id'  : 'inputfile-' + current_question + '_img'
+        })
+        .css('display', 'none')
+      $(hidden_input_file)[0].files = file_img
+      $(div_question).append(img_question, hidden_input_file)
 
       # <div> contains 2 <a>: link to EDIT and link to DELETE
       edit_link = $('<a>').text('Edit').css('margin-right', '5px')
@@ -288,6 +351,7 @@ remove_choice = (numero_choice) ->
 # type: discriminator for adding / editing
 # true: adding
 # false: editing
+# havent' done the EDITING part yet
 confirm_question = (numero_question, type) ->
   if num_choice != 1
     if $('#question-content').val() != ''
@@ -295,9 +359,7 @@ confirm_question = (numero_question, type) ->
       new_question = { 
         no_question: numero_question, 
         content: $('#question-content').val(), 
-        type_question: type_to_code_question(type_question),
-        image_question: $('#question_img')[0].files[0]
-        # somehow the image file is empty ?
+        type_question: type_to_code_question(type_question)
       }
       arr_questions.push(new_question)
       $('#modal-question').modal('hide')
@@ -328,30 +390,46 @@ cancel_question = (numero_question) ->
       arr_choices.splice(index, 1)
 
 $ ->
+  # LIST OF SURVEYS
+  # immediately run this method when user load List of Surveys
   check_filter_criteria()
 
+  # COMPLETING A SURVEY
+  # get the total number of question and then show the current question
   total_page = $('.question').length
   show_current_page()
 
+  # COMPLETING A SURVEY
+  # Previous button: go to previous question when completing a survey
   $('#btn-prev').click (event) ->
     event.preventDefault()
     if current_page > 1 then current_page -=1
     show_current_page()
 
+  # COMPLETING A SURVEY
+  # Next button: go to next question when completing a survey
   $('#btn-next').click (event) ->
     event.preventDefault()
+    # validate the question here
     valid = validate_question()
     if valid
       if current_page < total_page then current_page += 1
       show_current_page()
 
+  # COMPLETING A SURVEY
+  # Submit button is placed on the last page (last question)
+  # Fire the valiadation for the last question
   $('#form-questions').submit ->
     return validate_question()
 
+  # CREATING A SURVEY
+  # Date-picker to chose Date closed for the survey
   $('#datepicker-closing').datepicker({
     format: 'dd/mm/yyyy'
   })
 
+  # CREATING A SURVEY
+  # Reset the modal (to create a single question) each time it is shown
   $('#modal-question').on 'show.bs.modal', ->
     num_choice = 1
     $('#question-content').val('').attr('placeholder', '')
@@ -359,10 +437,13 @@ $ ->
     $('#question-img-zone').attr('src', '').css('display', 'none')
     $('#question_img')[0].files = []
 
+  # CREATING A SURVEY
+  # Click on Add choice 
   $('#add-choice').click ->
     $('#alert-question').text('')
     add_choice(true)
 
+  # CREATING A SURVEY: confirming the creation of new question
   # Type: discriminator to recognize adding / editing
   # true: adding
   # false: editing
@@ -370,47 +451,39 @@ $ ->
     confirm_question(num_question, true)
     return false
 
+  # CREATING A SURVEY: cancelling the creation of new question
   $('#cancel-question').click ->
     cancel_question(num_question)
 
+  # CREATING A SURVEY: click on select box to choose the type of the new question
+  # Type of Question: Multiple choices / Dropdown list / One choices only / On the scale
   $('#type_question').find('option').each (index, value) ->
     $(value).click ->
       display_modal_question(index)
 
+  # CREATING A SURVEY: confirming a new survey
   $('#confirm-survey').click ->
     $('#hidden_questions').val(JSON.stringify(arr_questions))
     $('#hidden_choices').val(JSON.stringify(arr_choices))
 
+
+  # CREATING A SURVEY: resetting a survey
+  # erases only the questions, leaves General information intact
   $('#btn-reset-survey').click ->
     #$('#list-questions').empty()
     $('#modal-reset').modal()
     return false
 
+  # CREATING A SURVEY: clicks on button "Upload image" to...yes to upload an image
   $('#btn-question-img').click ->
     $('#question_img').click()
 
+  # CREATING A SURVEY: immediately shows the image on page when a file is chosen
   $('#question_img').on('change', ->
-    filesSelected = $(this)[0].files
-    if filesSelected.length > 0
-      fileToLoad = filesSelected[0]
-      if fileToLoad.type.match('image.*')
-        fileReader = new FileReader()
-        fileReader.onload = (fileLoadedEvent) ->
-          $('#question-img-zone')
-          .attr({
-            'src': fileLoadedEvent.target.result,
-            'alt': 'image for question',
-            'width': '300px',
-            'height': '180px'
-          })
-          .css({
-            'margin-top': '15px',
-            'display': 'block'
-          })
-          return
-        fileReader.readAsDataURL(fileToLoad)
+    load_image_from_file('#question_img', '#question-img-zone')
    )
 
+  # CREATING A SURVEY: no I don't want this ugly image, remove it for me
   $('#btn-remove-img').click ->
     $('#question-img-zone').attr('src', '').css('display', 'none')
     $('#question_img')[0].files = null
